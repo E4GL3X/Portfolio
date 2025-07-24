@@ -19,13 +19,13 @@ A machine learning model trained on seismic datasets to predict the likelihood o
 ### 🎮 Wings of Glory
 A 2D arcade-style Java game inspired by Flappy Bird. Developed with Java Swing and object-oriented programming, focused on game physics, collision detection, and animation loops.
 
-
 ---
 
 ## 🎨 Design & Layout
 
-- Built using HTML5, CSS3, JS, Bootstrap 4
-- Follows a modular `section`-based structure
-- Responsive design for desktop and mobile
+- Built using HTML5, CSS3, JS, Bootstrap 4  
+- Follows a modular `section`-based structure  
+- Responsive design for desktop and mobile  
 
 ---
+
