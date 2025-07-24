@@ -1,32 +1,31 @@
-Forty by HTML5 UP
-html5up.net | @ajlkn
-Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+# 💼 Portfolio - Md. Toha Siddique
+
+Welcome to my personal developer portfolio! This responsive website showcases my technical skills, featured projects, and passion for building smart, real-world software solutions. Designed with HTML, CSS, and a touch of Bootstrap, it reflects both my engineering mindset and my creative edge.
+
+## 📌 Featured Projects
+
+### 🚌 Swift Transit
+A smart, database-backed bus transit management system. It includes route allocation, real-time tracking, and online ticket booking. Designed to modernize urban public transport using core DBMS concepts.
+
+### 🧠 Mentora App
+A tuition tracking and student management app built using Flutter and Firebase. Features include student/teacher login, attendance monitoring, homework tracking, and email reminders — all streamlined through a clean, intuitive UI.
+
+### 💬 Sentiment Analysis from Reviews
+A deep learning NLP model that extracts and classifies user sentiment from product reviews using LSTM and text preprocessing pipelines. Built to improve product feedback systems and customer understanding.
+
+### 🌍 Earthquake Prediction Using ML
+A machine learning model trained on seismic datasets to predict the likelihood of earthquakes. Uses regression and classification models to contribute toward early warning systems and disaster mitigation.
+
+### 🎮 Wings of Glory
+A 2D arcade-style Java game inspired by Flappy Bird. Developed with Java Swing and object-oriented programming, focused on game physics, collision detection, and animation loops.
 
 
-This is Forty, my latest and greatest addition to HTML5 UP and, per its incredibly
-creative name, my 40th (woohoo)! It's built around a grid of "image tiles" that are
-set up to smoothly transition to secondary landing pages (for which a separate page
-template is provided), and includes a number of neat effects (check out the menu!),
-extra features, and all the usual stuff you'd expect. Hope you dig it!
+---
 
-Demo images* courtesy of Unsplash, a radtastic collection of CC0 (public domain) images
-you can use for pretty much whatever.
+## 🎨 Design & Layout
 
-(* = not included)
+- Built using HTML5, CSS3, JS, Bootstrap 4
+- Follows a modular `section`-based structure
+- Responsive design for desktop and mobile
 
-AJ
-aj@lkn.io | @ajlkn
-
-
-Credits:
-
-	Demo Images:
-		Unsplash (unsplash.com)
-
-	Icons:
-		Font Awesome (fontawesome.io)
-
-	Other:
-		jQuery (jquery.com)
-		Scrollex (github.com/ajlkn/jquery.scrollex)
-		Responsive Tools (github.com/ajlkn/responsive-tools)
+---
