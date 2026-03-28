@@ -6,26 +6,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Toha Siddique — Flutter Developer</title>
     <link
-        href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Instrument+Serif:ital@0;1&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
         rel="stylesheet" />
     <style>
         :root {
-            --bg: #080b0f;
-            --surface: #0e1318;
-            --border: rgba(255, 255, 255, 0.07);
-            --accent: #00e5a0;
-            --accent2: #0af;
-            --text: #e8edf2;
-            --muted: #5a6a7a;
-            --glass: rgba(255, 255, 255, 0.04);
+            --bg: #0a0c12;
+            --surface: #12151c;
+            --border: rgba(255, 255, 255, 0.08);
+            --accent: #67e8f9;
+            --accent-glow: #22d3ee;
+            --text: #f8fafc;
+            --muted: #8b9db0;
+            --glass: rgba(255, 255, 255, 0.03);
         }
 
-        *,
-        *::before,
-        *::after {
-            box-sizing: border-box;
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
         }
 
         html {
@@ -35,12 +33,24 @@
         body {
             background: var(--bg);
             color: var(--text);
-            font-family: 'DM Mono', monospace;
+            font-family: 'JetBrains Mono', monospace;
             overflow-x: hidden;
             cursor: none;
+            position: relative;
         }
 
-        /* CUSTOM CURSOR */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background-image: 
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.04;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* CURSOR */
         .cursor {
             position: fixed;
             top: 0;
@@ -56,50 +66,51 @@
             border-radius: 50%;
             position: absolute;
             transform: translate(-50%, -50%);
-            transition: transform 0.1s;
+            transition: transform 0.12s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
         .cursor-ring {
-            width: 32px;
-            height: 32px;
-            border: 1px solid rgba(0, 229, 160, 0.4);
+            width: 36px;
+            height: 36px;
+            border: 1.5px solid var(--accent-glow);
             border-radius: 50%;
             position: absolute;
             transform: translate(-50%, -50%);
-            transition: transform 0.18s ease, width 0.2s, height 0.2s, border-color 0.2s;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            opacity: 0.25;
         }
 
-        body:hover .cursor-ring {
-            opacity: 1;
-        }
-
-        /* NAV */
+        /* NAV — floating pill */
         nav {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 100;
-            padding: 20px 48px;
+            top: 28px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            background: rgba(18, 21, 28, 0.75);
+            backdrop-filter: blur(24px);
+            border: 1px solid var(--border);
+            border-radius: 9999px;
+            padding: 12px 32px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid transparent;
-            transition: background 0.3s, border-color 0.3s;
+            gap: 48px;
+            box-shadow: 0 8px 32px -12px rgba(103, 232, 249, 0.2);
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
         nav.scrolled {
-            background: rgba(8, 11, 15, 0.85);
-            backdrop-filter: blur(16px);
-            border-color: var(--border);
+            top: 16px;
+            padding: 10px 28px;
+            box-shadow: 0 4px 20px -8px rgba(103, 232, 249, 0.3);
         }
 
         .nav-logo {
-            font-family: 'Syne', sans-serif;
-            font-weight: 800;
-            font-size: 18px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            font-size: 21px;
+            letter-spacing: -1px;
             color: var(--text);
-            letter-spacing: -0.5px;
             text-decoration: none;
         }
 
@@ -109,21 +120,37 @@
 
         .nav-links {
             display: flex;
-            gap: 36px;
+            gap: 32px;
             list-style: none;
         }
 
         .nav-links a {
             color: var(--muted);
-            font-size: 12px;
-            letter-spacing: 0.08em;
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 0.8px;
             text-decoration: none;
-            text-transform: uppercase;
-            transition: color 0.2s;
+            transition: color 0.3s ease;
+            position: relative;
         }
 
         .nav-links a:hover {
             color: var(--accent);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--accent);
+            transition: width 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
         }
 
         /* HERO */
@@ -131,80 +158,62 @@
             min-height: 100vh;
             display: flex;
             align-items: center;
-            padding: 120px 48px 80px;
+            justify-content: center;
+            padding: 0 48px;
             position: relative;
             overflow: hidden;
         }
 
-        .hero-grid-bg {
+        .hero-bg {
             position: absolute;
             inset: 0;
+            background:
+                radial-gradient(circle at 20% 30%, rgba(103, 232, 249, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(34, 211, 238, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(10, 12, 18, 1) 0%, transparent 100%);
             pointer-events: none;
-            background-image:
-                linear-gradient(var(--border) 1px, transparent 1px),
-                linear-gradient(90deg, var(--border) 1px, transparent 1px);
-            background-size: 80px 80px;
-            mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 30%, transparent 100%);
+            animation: subtleShift 25s ease infinite;
         }
 
-        .hero-glow {
-            position: absolute;
-            width: 700px;
-            height: 700px;
-            border-radius: 50%;
-            pointer-events: none;
-            background: radial-gradient(circle, rgba(0, 229, 160, 0.08) 0%, transparent 70%);
-            top: -100px;
-            left: -200px;
-            animation: glowPulse 6s ease-in-out infinite;
-        }
-
-        .hero-glow2 {
-            position: absolute;
-            width: 500px;
-            height: 500px;
-            border-radius: 50%;
-            pointer-events: none;
-            background: radial-gradient(circle, rgba(0, 170, 255, 0.06) 0%, transparent 70%);
-            bottom: -100px;
-            right: -100px;
-            animation: glowPulse 8s ease-in-out infinite reverse;
-        }
-
-        @keyframes glowPulse {
-
-            0%,
-            100% {
-                transform: scale(1);
-                opacity: 1;
+        @keyframes subtleShift {
+            0% {
+                transform: translate(0, 0);
             }
 
             50% {
-                transform: scale(1.1);
-                opacity: 0.7;
+                transform: translate(8px, -8px);
+            }
+
+            100% {
+                transform: translate(0, 0);
             }
         }
 
-        .hero-inner {
-            position: relative;
-            z-index: 1;
-            max-width: 1200px;
-            width: 100%;
+        .hero-content {
+            max-width: 920px;
+            text-align: center;
+            z-index: 2;
         }
 
         .hero-tag {
             display: inline-flex;
             align-items: center;
             gap: 8px;
+            padding: 8px 24px;
+            border-radius: 9999px;
             border: 1px solid var(--border);
-            border-radius: 100px;
-            padding: 6px 14px;
-            font-size: 11px;
-            letter-spacing: 0.1em;
-            color: var(--muted);
-            margin-bottom: 40px;
             background: var(--glass);
-            animation: fadeUp 0.8s ease both;
+            color: var(--muted);
+            font-size: 12px;
+            letter-spacing: 2px;
+            margin-bottom: 24px;
+            transition: all 0.4s ease;
+        }
+
+        .hero-tag:hover {
+            border-color: var(--accent);
+            color: var(--text);
+            transform: scale(1.05);
         }
 
         .hero-tag .dot {
@@ -219,42 +228,49 @@
 
             0%,
             100% {
-                opacity: 1
+                opacity: 1;
             }
 
             50% {
-                opacity: 0.3
+                opacity: 0.3;
             }
         }
 
         .hero-name {
-            font-family: 'Syne', sans-serif;
-            font-weight: 800;
-            font-size: clamp(52px, 8vw, 110px);
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(64px, 9vw, 120px);
+            font-weight: 700;
             line-height: 0.92;
-            letter-spacing: -3px;
-            animation: fadeUp 0.9s 0.1s ease both;
+            letter-spacing: -4px;
+            margin-bottom: 32px;
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .hero-name .line2 {
             display: block;
-            -webkit-text-stroke: 1px rgba(255, 255, 255, 0.2);
-            color: transparent;
             font-style: italic;
-            font-family: 'Instrument Serif', serif;
+            font-weight: 500;
+            font-size: clamp(48px, 6vw, 82px);
+            letter-spacing: -3px;
+            color: transparent;
+            -webkit-text-stroke: 1.5px rgba(103, 232, 249, 0.25);
         }
 
         .hero-name .accent {
             color: var(--accent);
+            -webkit-text-stroke: 0;
+            text-shadow: 0 0 30px rgba(103, 232, 249, 0.3);
         }
 
         .hero-sub {
-            margin-top: 36px;
-            font-size: 14px;
+            font-size: 15px;
+            max-width: 800px;
+            margin: 28px auto 44px;
             color: var(--muted);
-            max-width: 480px;
             line-height: 1.8;
-            animation: fadeUp 1s 0.2s ease both;
+            text-align: center;
         }
 
         .hero-sub strong {
@@ -262,90 +278,444 @@
         }
 
         .hero-cta {
-            margin-top: 48px;
             display: flex;
-            gap: 16px;
+            gap: 20px;
+            justify-content: center;
             flex-wrap: wrap;
-            animation: fadeUp 1s 0.3s ease both;
+        }
+
+        .btn {
+            padding: 18px 36px;
+            border-radius: 9999px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
         .btn-primary {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
             background: var(--accent);
-            color: #000;
-            font-family: 'DM Mono', monospace;
-            font-size: 12px;
-            font-weight: 500;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-            padding: 14px 28px;
-            border-radius: 4px;
-            text-decoration: none;
-            transition: transform 0.2s, box-shadow 0.2s;
+            color: #0a0c12;
+            box-shadow: 0 0 0 0 rgba(103, 232, 249, 0.4);
         }
 
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 32px rgba(0, 229, 160, 0.3);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px -10px var(--accent);
         }
 
         .btn-ghost {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            border: 1px solid var(--border);
+            border: 2px solid var(--border);
             color: var(--muted);
-            font-family: 'DM Mono', monospace;
-            font-size: 12px;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-            padding: 14px 28px;
-            border-radius: 4px;
-            text-decoration: none;
-            transition: border-color 0.2s, color 0.2s;
         }
 
         .btn-ghost:hover {
             border-color: var(--accent);
             color: var(--accent);
+            transform: translateY(-3px);
         }
 
-        .hero-scroll {
+        /* SECTIONS */
+        section {
+            padding: 140px 48px 100px;
+            max-width: 1240px;
+            margin: 0 auto;
+        }
+
+        .section-label {
+            font-size: 11px;
+            letter-spacing: 3px;
+            color: var(--accent);
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        .section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(42px, 6vw, 64px);
+            font-weight: 600;
+            line-height: 1.05;
+            letter-spacing: -2px;
+            margin-bottom: 80px;
+        }
+
+        /* EXPERIENCE */
+        .exp-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 48px;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .exp-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-12px);
+            box-shadow: 25px 25px 50px -15px rgba(103, 232, 249, 0.15);
+        }
+
+        .exp-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .exp-role {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .exp-date {
+            background: rgba(103, 232, 249, 0.1);
+            color: var(--accent);
+            padding: 6px 18px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .exp-company {
+            font-size: 13px;
+            color: var(--muted);
+            margin-bottom: 28px;
+        }
+
+        .exp-bullets {
+            list-style: none;
+        }
+
+        .exp-bullets li {
+            padding-left: 24px;
+            position: relative;
+            margin-bottom: 12px;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.75;
+        }
+
+        .exp-bullets li::before {
+            content: '◆';
             position: absolute;
-            bottom: 40px;
-            right: 48px;
+            left: 0;
+            color: var(--accent);
+            font-size: 10px;
+            top: 4px;
+        }
+
+        .exp-tags {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 32px;
+        }
+
+        .tag {
+            background: rgba(103, 232, 249, 0.1);
+            color: var(--accent);
+            padding: 6px 16px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        /* STACK */
+        .stack-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .stack-item {
+            flex: 0 1 150px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 20px 12px;
+            text-align: center;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 8px;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            cursor: default;
+            backdrop-filter: blur(8px);
+        }
+
+        @media (max-width: 1100px) {
+            .stack-item {
+                flex: 0 1 calc(20% - 20px);
+            }
+        }
+
+        @media (max-width: 850px) {
+            .stack-item {
+                flex: 0 1 calc(33.33% - 20px);
+            }
+        }
+
+        @media (max-width: 500px) {
+            .stack-item {
+                flex: 0 1 calc(50% - 20px);
+            }
+        }
+
+        .stack-item:hover {
+            border-color: var(--accent);
+            transform: scale(1.08) rotate(2deg);
+            box-shadow: 0 20px 30px -15px var(--accent);
+        }
+
+        .stack-item svg {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 16px;
+            transition: filter 0.3s ease;
+        }
+
+        .stack-item:hover svg {
+            filter: brightness(1.2) drop-shadow(0 0 12px var(--accent));
+        }
+
+        .stack-item span {
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 1.5px;
             color: var(--muted);
-            font-size: 10px;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            animation: fadeUp 1s 0.6s ease both;
         }
 
-        .scroll-line {
-            width: 1px;
-            height: 60px;
-            background: linear-gradient(to bottom, var(--accent), transparent);
-            animation: scrollAnim 2s ease-in-out infinite;
+        /* PROJECTS */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 32px;
         }
 
-        @keyframes scrollAnim {
+        .project-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 40px;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            position: relative;
+            overflow: hidden;
+        }
 
-            0%,
-            100% {
-                transform: scaleY(1);
-                opacity: 1
-            }
+        .project-card:hover {
+            transform: translateY(-14px);
+            border-color: var(--accent);
+        }
 
-            50% {
-                transform: scaleY(0.5);
-                opacity: 0.4
-            }
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 40%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(103, 232, 249, 0.15), transparent);
+            transition: left 0.8s;
+        }
+
+        .project-card:hover::before {
+            left: 120%;
+        }
+
+        .project-num {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 82px;
+            font-weight: 700;
+            color: rgba(103, 232, 249, 0.06);
+            position: absolute;
+            top: 20px;
+            right: 24px;
+            pointer-events: none;
+        }
+
+        .project-name {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .project-desc {
+            color: var(--muted);
+            line-height: 1.75;
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        /* PUBLICATION */
+        .pub-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 40px;
+            display: flex;
+            gap: 32px;
+            align-items: flex-start;
+            transition: border-color 0.4s ease;
+        }
+
+        .pub-card:hover {
+            border-color: var(--accent);
+        }
+
+        .pub-icon {
+            width: 56px;
+            height: 56px;
+            flex-shrink: 0;
+            background: rgba(103, 232, 249, 0.1);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .pub-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 20px;
+            font-weight: 600;
+            line-height: 1.4;
+            margin-bottom: 10px;
+        }
+
+        .pub-venue {
+            font-size: 12px;
+            color: var(--accent);
+            letter-spacing: 1px;
+        }
+
+        /* AWARDS */
+        .awards-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .award-item {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 24px 32px;
+            transition: border-color 0.4s ease;
+        }
+
+        .award-item:hover {
+            border-color: var(--accent);
+        }
+
+        .award-medal {
+            font-size: 24px;
+        }
+
+        .award-text {
+            font-size: 14px;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        /* CTA */
+        #cta {
+            padding: 160px 48px;
+            text-align: center;
+            border-top: 1px solid var(--border);
+        }
+
+        #cta .big-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(52px, 8vw, 92px);
+            font-weight: 700;
+            line-height: 1;
+            letter-spacing: -3px;
+            margin-bottom: 32px;
+        }
+
+        #cta .big-text em {
+            color: var(--accent);
+            font-style: normal;
+        }
+
+        #cta p {
+            max-width: 520px;
+            margin: 0 auto 48px;
+            color: var(--muted);
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        .contact-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            justify-content: center;
+        }
+
+        .contact-link {
+            padding: 16px 32px;
+            border-radius: 9999px;
+            border: 1px solid var(--border);
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.4s ease;
+        }
+
+        .contact-link:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: scale(1.05);
+        }
+
+        .contact-link.primary {
+            background: var(--accent);
+            color: #0a0c12;
+            border-color: var(--accent);
+        }
+
+        .contact-link.primary:hover {
+            box-shadow: 0 12px 32px rgba(103, 232, 249, 0.35);
+            transform: translateY(-3px) scale(1.03);
+        }
+
+        footer {
+            padding: 32px 48px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--muted);
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        /* SCROLL REVEAL */
+        .reveal {
+            opacity: 0;
+            transform: translateY(60px);
+            transition: all 1s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         @keyframes fadeUp {
@@ -360,413 +730,27 @@
             }
         }
 
-        /* SECTIONS SHARED */
-        section {
-            padding: 100px 48px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .section-label {
-            font-size: 10px;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            color: var(--accent);
-            margin-bottom: 16px;
-        }
-
-        .section-title {
-            font-family: 'Syne', sans-serif;
-            font-size: clamp(32px, 5vw, 56px);
-            font-weight: 800;
-            letter-spacing: -1.5px;
-            line-height: 1.05;
-            margin-bottom: 64px;
-        }
-
-        /* EXPERIENCE */
-        .exp-card {
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 40px;
-            background: var(--surface);
-            position: relative;
-            overflow: hidden;
-            transition: border-color 0.3s, transform 0.3s;
-        }
-
-        .exp-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--accent), transparent);
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .exp-card:hover {
-            border-color: rgba(0, 229, 160, 0.25);
-            transform: translateY(-2px);
-        }
-
-        .exp-card:hover::before {
-            opacity: 1;
-        }
-
-        .exp-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-bottom: 12px;
-        }
-
-        .exp-role {
-            font-family: 'Syne', sans-serif;
-            font-size: 20px;
-            font-weight: 700;
-        }
-
-        .exp-date {
-            font-size: 11px;
-            color: var(--accent);
-            border: 1px solid rgba(0, 229, 160, 0.3);
-            padding: 4px 12px;
-            border-radius: 100px;
-        }
-
-        .exp-company {
-            font-size: 12px;
-            color: var(--muted);
-            margin-bottom: 24px;
-        }
-
-        .exp-bullets {
-            list-style: none;
-        }
-
-        .exp-bullets li {
-            font-size: 13px;
-            color: var(--muted);
-            line-height: 1.8;
-            padding-left: 18px;
-            position: relative;
-            margin-bottom: 6px;
-        }
-
-        .exp-bullets li::before {
-            content: '→';
-            position: absolute;
-            left: 0;
-            color: var(--accent);
-            font-size: 11px;
-        }
-
-        .exp-tags {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-top: 24px;
-        }
-
-        .tag {
-            font-size: 10px;
-            letter-spacing: 0.08em;
-            background: rgba(0, 229, 160, 0.06);
-            border: 1px solid rgba(0, 229, 160, 0.15);
-            color: var(--accent);
-            padding: 4px 10px;
-            border-radius: 4px;
-        }
-
-        /* STACK */
-        #stack {
-            padding: 80px 48px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .stack-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
-            gap: 16px;
-        }
-
-        .stack-item {
-            aspect-ratio: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            background: var(--surface);
-            transition: border-color 0.25s, transform 0.25s, background 0.25s;
-            cursor: default;
-        }
-
-        .stack-item:hover {
-            border-color: rgba(255, 255, 255, 0.2);
-            transform: translateY(-4px) scale(1.04);
-            background: rgba(255, 255, 255, 0.06);
-        }
-
-        .stack-item img {
-            width: 36px;
-            height: 36px;
-            object-fit: contain;
-        }
-
-        .stack-item span {
-            font-size: 9px;
-            letter-spacing: 0.06em;
-            color: var(--muted);
-            text-transform: uppercase;
-        }
-
-        /* PROJECTS */
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-            gap: 24px;
-        }
-
-        .project-card {
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 32px;
-            background: var(--surface);
-            position: relative;
-            overflow: hidden;
-            transition: transform 0.3s, border-color 0.3s;
-        }
-
-        .project-card:hover {
-            transform: translateY(-4px);
-            border-color: rgba(0, 229, 160, 0.25);
-        }
-
-        .project-num {
-            font-family: 'Syne', sans-serif;
-            font-size: 64px;
-            font-weight: 800;
-            line-height: 1;
-            color: rgba(255, 255, 255, 0.03);
-            position: absolute;
-            top: 16px;
-            right: 20px;
-            pointer-events: none;
-        }
-
-        .project-name {
-            font-family: 'Syne', sans-serif;
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 12px;
-        }
-
-        .project-desc {
-            font-size: 12px;
-            color: var(--muted);
-            line-height: 1.8;
-            margin-bottom: 20px;
-        }
-
-        /* PUBLICATION */
-        .pub-card {
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 40px;
-            background: var(--surface);
-            display: flex;
-            gap: 32px;
-            align-items: flex-start;
-            transition: border-color 0.3s;
-        }
-
-        .pub-card:hover {
-            border-color: rgba(0, 170, 255, 0.3);
-        }
-
-        .pub-icon {
-            width: 48px;
-            height: 48px;
-            flex-shrink: 0;
-            background: rgba(0, 170, 255, 0.1);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-        }
-
-        .pub-title {
-            font-family: 'Instrument Serif', serif;
-            font-size: 20px;
-            line-height: 1.4;
-            margin-bottom: 8px;
-        }
-
-        .pub-venue {
-            font-size: 11px;
-            color: var(--accent2);
-            letter-spacing: 0.06em;
-        }
-
-        /* AWARDS */
-        .awards-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .award-item {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            padding: 16px 24px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            background: var(--surface);
-            transition: border-color 0.2s;
-        }
-
-        .award-item:hover {
-            border-color: rgba(0, 229, 160, 0.2);
-        }
-
-        .award-medal {
-            font-size: 20px;
-        }
-
-        .award-text {
-            font-size: 13px;
-            color: var(--muted);
-        }
-
-        /* FOOTER / CTA */
-        #cta {
-            padding: 100px 48px;
-            border-top: 1px solid var(--border);
-            text-align: center;
-        }
-
-        #cta .big-text {
-            font-family: 'Syne', sans-serif;
-            font-size: clamp(36px, 6vw, 80px);
-            font-weight: 800;
-            letter-spacing: -2px;
-            line-height: 1.05;
-            margin-bottom: 24px;
-        }
-
-        #cta .big-text em {
-            font-style: italic;
-            font-family: 'Instrument Serif', serif;
-            color: var(--accent);
-        }
-
-        #cta p {
-            color: var(--muted);
-            font-size: 13px;
-            margin-bottom: 40px;
-        }
-
-        .contact-links {
-            display: flex;
-            gap: 16px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .contact-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 12px 24px;
-            border-radius: 6px;
-            border: 1px solid var(--border);
-            font-size: 12px;
-            text-decoration: none;
-            color: var(--muted);
-            transition: all 0.2s;
-            background: var(--surface);
-        }
-
-        .contact-link:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-        }
-
-        .contact-link.primary {
-            background: var(--accent);
-            color: #000;
-            border-color: var(--accent);
-        }
-
-        .contact-link.primary:hover {
-            box-shadow: 0 8px 24px rgba(0, 229, 160, 0.3);
-            transform: translateY(-2px);
-        }
-
-        footer {
-            padding: 24px 48px;
-            border-top: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-
-        footer span {
-            font-size: 11px;
-            color: var(--muted);
-        }
-
-        /* SCROLL REVEAL */
-        .reveal {
-            opacity: 0;
-            transform: translateY(32px);
-            transition: opacity 0.7s ease, transform 0.7s ease;
-        }
-
-        .reveal.visible {
-            opacity: 1;
-            transform: none;
-        }
-
-        /* DIVIDER */
-        .section-divider {
-            width: 100%;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--border), transparent);
-            margin: 0 48px;
-            max-width: calc(100% - 96px);
-        }
-
         @media (max-width: 768px) {
             nav {
-                padding: 16px 24px;
+                padding: 12px 20px;
+                gap: 24px;
+                top: 16px;
             }
 
             #hero {
+                padding: 0 24px;
+            }
+
+            section {
                 padding: 100px 24px 80px;
             }
 
-            section,
-            #stack,
             #cta {
-                padding: 60px 24px;
+                padding: 100px 24px;
             }
 
             .hero-name {
-                letter-spacing: -1.5px;
+                letter-spacing: -2px;
             }
 
             .pub-card {
@@ -779,6 +763,10 @@
 
             .nav-links {
                 display: none;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -797,7 +785,7 @@
         <a href="#" class="nav-logo">Toha<span>.</span></a>
         <ul class="nav-links">
             <li><a href="#experience">Experience</a></li>
-            <li><a href="#stack">Stack</a></li>
+            <li><a href="#stack">Tech Stack</a></li>
             <li><a href="#projects">Projects</a></li>
             <li><a href="#cta">Let's Talk</a></li>
         </ul>
@@ -805,10 +793,8 @@
 
     <!-- HERO -->
     <div id="hero">
-        <div class="hero-grid-bg"></div>
-        <div class="hero-glow"></div>
-        <div class="hero-glow2"></div>
-        <div class="hero-inner">
+        <div class="hero-bg"></div>
+        <div class="hero-content">
             <div class="hero-tag">
                 <span class="dot"></span>
                 Available for opportunities · Dhaka, Bangladesh
@@ -818,24 +804,25 @@
                 <span class="line2">something <span class="accent">real.</span></span>
             </h1>
             <p class="hero-sub">
-                I'm <strong>Toha Siddique</strong> — a Flutter Developer who turns ideas into polished, cross-platform
-                mobile experiences. Currently shipping production apps at <strong>Software Lighthouse</strong>, building
-                for EU compliance at scale.
+                I'm <strong>Toha Siddique</strong>, a Flutter Developer with hands-on experience building cross-platform
+                mobile applications for both Android and iOS. I work with Flutter and Dart, and have built projects
+                using tools like Provider, Firebase, and REST APIs. I also have some experience with web technologies
+                such as HTML, CSS, and JavaScript, along with databases like PostgreSQL and MySQL.
+
+                I enjoy creating clean, production-ready user interfaces, handling real-time data, and managing
+                application state effectively. Beyond development, I have a background in competitive programming, have
+                worked on IoT-based systems, and have published NLP research at IEEE ICCCNT 2025.
             </p>
             <div class="hero-cta">
-                <a href="#cta" class="btn-primary">↗ Get in touch</a>
-                <a href="#projects" class="btn-ghost">View work</a>
+                <a href="#cta" class="btn btn-primary">↗ Get in touch</a>
+                <a href="#projects" class="btn btn-ghost">View work</a>
             </div>
-        </div>
-        <div class="hero-scroll">
-            <span>scroll</span>
-            <div class="scroll-line"></div>
         </div>
     </div>
 
     <!-- EXPERIENCE -->
-    <section id="experience" style="max-width:1200px; margin:0 auto;">
-        <p class="section-label reveal">/ Work Experience</p>
+    <section id="experience">
+        <p class="section-label reveal">/ Experience</p>
         <h2 class="section-title reveal">Where I've<br>been building.</h2>
 
         <div class="exp-card reveal">
@@ -861,99 +848,260 @@
     </section>
 
     <!-- TECH STACK -->
-    <section id="stack" style="max-width:1200px; margin:0 auto;">
+    <section id="stack">
         <p class="section-label reveal">/ Tech Stack</p>
-        <h2 class="section-title reveal">Tools I reach<br>for first.</h2>
+        <h2 class="section-title reveal">Tech Stack.</h2>
 
         <div class="stack-grid reveal">
             <!-- Flutter -->
             <div class="stack-item">
-                <img src="https://storage.googleapis.com/cms-storage-bucket/4fd0db61df0567c7f384.png" alt="Flutter"
-                    onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 36 36%22><text y=%2228%22 font-size=%2228%22>📱</text></svg>'" />
+                <svg width="48" height="48" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 100 100">
+                    <g clip-path="url(#a)">
+                        <path fill="#42a5f5" fill-opacity=".8"
+                            d="M25.399 65.395 10 49.996 60 0h30.794zm65.395-19.259H60L48.465 57.671l15.399 15.4" />
+                        <path fill="#0d47a1" d="M48.465 88.465 60 100h30.794l-26.93-26.93" />
+                        <path fill="#42a5f5" d="M33.103 73.078 48.477 57.7l15.375 15.375-15.375 15.379z" />
+                        <path fill="url(#b)" d="m48.477 88.453 15.375-15.375 2.146 2.146L50.623 90.6z" />
+                        <path fill="url(#c)" d="m48.465 88.465 22.848-7.894-7.449-7.505" />
+                    </g>
+                    <defs>
+                        <linearGradient id="b" x1="56.167" x2="58.314" y1="80.763" y2="82.909"
+                            gradientUnits="userSpaceOnUse">
+                            <stop offset=".2" stop-opacity=".15" />
+                            <stop offset=".85" stop-color="#616161" stop-opacity=".01" />
+                        </linearGradient>
+                        <linearGradient id="c" x1="48.471" x2="71.318" y1="80.766" y2="80.766"
+                            gradientUnits="userSpaceOnUse">
+                            <stop offset=".2" stop-opacity=".55" />
+                            <stop offset=".85" stop-color="#616161" stop-opacity=".01" />
+                        </linearGradient>
+                        <clipPath id="a">
+                            <path fill="#fff" d="M0 0h100v100H0z" />
+                        </clipPath>
+                    </defs>
+                </svg>
                 <span>Flutter</span>
             </div>
             <!-- Dart -->
             <div class="stack-item">
-                <img src="https://dart.dev/assets/img/shared/dart/logo+text/horizontal/white.svg" alt="Dart"
-                    style="filter:brightness(0.8)"
-                    onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 36 36%22><text y=%2228%22 font-size=%2228%22>🎯</text></svg>'" />
+                <svg width="48" height="48" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 100 100">
+                    <g clip-path="url(#a)">
+                        <g clip-path="url(#b)">
+                            <path fill="#00c4b3"
+                                d="m26.878 27.058-6.425-6.425v46.335l.09 2.171c0 .996.181 2.172.543 3.349l50.86 17.918 12.67-5.61z" />
+                            <path fill="#22d3c5"
+                                d="m84.615 84.796-12.67 5.61-50.769-17.918c.996 3.71 3.077 7.873 5.43 10.226l16.561 16.47 36.923.091z" />
+                            <path fill="#0075c9"
+                                d="M20.634 20.633.905 50.497c-1.629 1.72-.815 5.34 1.81 8.054l11.403 11.493 7.149 2.534c-.271-1.176-.543-2.353-.543-3.348l-.09-2.172z" />
+                            <path fill="#0075c9"
+                                d="M72.308 21.176a26 26 0 0 0-3.349-.543l-2.262-.09H20.453l64.162 64.162 5.611-12.67z" />
+                            <path fill="#00a8e1"
+                                d="M82.534 26.606c-2.353-2.353-6.425-4.525-10.226-5.43l17.918 50.86-5.61 12.67L98.37 80.27V42.533z" />
+                            <path fill="#00c4b3"
+                                d="M69.774 14.117 58.28 2.714C55.656.09 52.036-.725 50.226.904L20.362 20.633h46.244l2.263.09c.995 0 2.172.181 3.348.543z" />
+                        </g>
+                    </g>
+                    <defs>
+                        <clipPath id="a">
+                            <path fill="#fff" d="M0 0h100v100H0z" />
+                        </clipPath>
+                        <clipPath id="b">
+                            <path fill="#fff" d="M0 0h100v100H0z" />
+                        </clipPath>
+                    </defs>
+                </svg>
                 <span>Dart</span>
             </div>
             <!-- Firebase -->
             <div class="stack-item">
-                <img src="https://www.gstatic.com/devrel-devsite/prod/v5b525b1e9fc5ea4c40fdb93daea48bd3f28c59e67ebef0b2d5e7a56c33b0cf5/firebase/images/touchicon-180.png"
-                    alt="Firebase"
-                    onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 36 36%22><text y=%2228%22 font-size=%2228%22>🔥</text></svg>'" />
+                <svg width="48" height="48" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 100 100">
+                    <path fill="#ffa000"
+                        d="m61.405 36.118-10 9.311-9.284-18.733 4.796-10.77c1.212-2.15 3.194-2.177 4.406 0z" />
+                    <path fill="#f57f17" d="M51.409 45.425 14 80.22l28.126-53.523z" />
+                    <path fill="#ffca28"
+                        d="M72.371 21.877c1.792-1.707 3.636-1.131 4.103 1.293l9.725 56.58-32.257 19.364c-1.13.633-4.13.88-4.13.88s-2.729-.332-3.774-.908L14 80.219z" />
+                    <path fill="#ffa000" d="M42.126 26.697 14 80.219 26.535 1.99c.47-2.425 1.844-2.672 3.084-.524z" />
+                </svg>
                 <span>Firebase</span>
             </div>
             <!-- PostgreSQL -->
             <div class="stack-item">
-                <img src="https://wiki.postgresql.org/images/a/a4/PostgreSQL_logo.3colors.svg" alt="PostgreSQL"
-                    onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 36 36%22><text y=%2228%22 font-size=%2228%22>🐘</text></svg>'" />
+                <svg width="48" height="48" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 100 100">
+                    <path fill="#000"
+                        d="M98.472 59.902c-.582-1.766-2.105-2.995-4.074-3.29-.929-.14-1.992-.08-3.251.18-2.194.454-3.821.627-5.009.66 4.483-7.59 8.129-16.246 10.227-24.393 3.394-13.175 1.58-19.177-.539-21.892C90.218 3.981 82.036.121 72.166.003c-5.267-.065-9.89.978-12.3 1.728-2.246-.398-4.66-.62-7.193-.66-4.749-.076-8.944.962-12.529 3.095a57 57 0 0 0-8.848-2.227C22.644.514 15.672 1.624 10.57 5.237c-6.175 4.375-9.038 11.975-8.509 22.59.168 3.37 2.048 13.625 5.009 23.35 1.701 5.59 3.515 10.232 5.392 13.798 2.661 5.058 5.51 8.035 8.706 9.105 1.792.599 5.048 1.018 8.472-1.842.434.527 1.013 1.05 1.782 1.537.976.618 2.17 1.122 3.361 1.42 4.296 1.078 8.319.808 11.752-.701.02.612.037 1.197.05 1.702.023.82.046 1.623.076 2.374.203 5.08.548 9.029 1.57 11.792.055.152.13.384.21.63.51 1.564 1.361 4.182 3.529 6.232C54.215 99.35 56.929 100 59.415 100c1.247 0 2.437-.164 3.48-.388 3.72-.8 7.944-2.017 11-6.38 2.889-4.125 4.293-10.337 4.547-20.126l.093-.793.06-.517.68.06.176.012c3.788.173 8.42-.633 11.265-1.958 2.248-1.046 9.452-4.86 7.756-10.008" />
+                    <path fill="#336791"
+                        d="M91.994 60.903c-11.264 2.33-12.038-1.494-12.038-1.494C91.848 41.713 96.82 19.251 92.53 13.753 80.825-1.243 60.564 5.85 60.226 6.033l-.109.02c-2.225-.463-4.716-.74-7.515-.785-5.096-.084-8.963 1.34-11.896 3.57 0 0-36.145-14.93-34.463 18.78.357 7.17 10.25 54.262 22.05 40.039 4.313-5.202 8.48-9.6 8.48-9.6 2.07 1.38 4.547 2.082 7.145 1.83l.202-.172c-.063.646-.034 1.277.08 2.025-3.04 3.406-2.146 4.004-8.223 5.258-6.149 1.271-2.537 3.533-.178 4.125 2.859.717 9.474 1.732 13.943-4.542l-.178.716c1.19.957 2.027 6.222 1.887 10.996-.14 4.773-.234 8.05.704 10.61.94 2.56 1.874 8.32 9.863 6.604 6.674-1.435 10.134-5.152 10.615-11.353.341-4.407 1.114-3.756 1.163-7.697l.62-1.865c.715-5.976.113-7.904 4.225-7.007l1 .088c3.027.138 6.988-.488 9.313-1.572 5.007-2.33 7.976-6.22 3.04-5.198" />
+                    <path fill="#fff"
+                        d="M42.821 30.825c-1.015-.142-1.934-.011-2.4.342a.88.88 0 0 0-.364.587c-.058.42.235.884.415 1.123.51.678 1.255 1.143 1.992 1.246q.16.022.319.022c1.229 0 2.347-.96 2.445-1.668.123-.887-1.161-1.479-2.407-1.652m33.627.028c-.097-.696-1.33-.894-2.502-.73-1.17.162-2.303.692-2.209 1.389.076.542 1.052 1.467 2.207 1.467q.146 0 .296-.02c.77-.108 1.337-.599 1.605-.882.41-.431.647-.912.603-1.224" />
+                    <path fill="#fff"
+                        d="M95.743 60.639c-.43-1.303-1.812-1.721-4.109-1.246-6.82 1.411-9.262.434-10.063-.158 5.3-8.098 9.66-17.886 12.013-27.018 1.114-4.326 1.73-8.343 1.78-11.618.056-3.594-.555-6.235-1.814-7.848-5.076-6.505-12.526-9.993-21.544-10.09-6.2-.069-11.437 1.522-12.453 1.97a31 31 0 0 0-7.008-.903c-4.654-.076-8.677 1.042-12.007 3.32a53.5 53.5 0 0 0-9.759-2.566c-7.905-1.277-14.187-.31-18.67 2.875-5.35 3.8-7.819 10.593-7.34 20.19.16 3.229 1.995 13.161 4.89 22.673 3.811 12.52 7.954 19.607 12.313 21.065.51.17 1.098.29 1.747.29 1.59 0 3.54-.719 5.568-3.164a201 201 0 0 1 7.674-8.707 12.34 12.34 0 0 0 5.52 1.489l.014.151q-.497.594-.973 1.206c-1.334 1.698-1.612 2.052-5.906 2.938-1.221.253-4.465.923-4.513 3.204-.052 2.491 3.835 3.538 4.277 3.648 1.543.388 3.03.579 4.448.579 3.447 0 6.482-1.136 8.906-3.335-.074 8.882.295 17.634 1.359 20.3.87 2.183 2.999 7.519 9.72 7.518.986 0 2.072-.115 3.266-.372 7.015-1.508 10.061-4.617 11.24-11.47.63-3.664 1.712-12.411 2.221-17.103 1.074.336 2.457.49 3.952.49 3.118 0 6.715-.665 8.972-1.715 2.534-1.18 7.108-4.077 6.279-6.593M79.038 28.933c-.024 1.385-.214 2.643-.415 3.956-.217 1.411-.442 2.87-.498 4.642-.056 1.725.16 3.517.367 5.251.42 3.502.85 7.107-.817 10.664q-.415-.739-.738-1.522c-.208-.504-.658-1.313-1.28-2.433-2.424-4.358-8.1-14.565-5.194-18.73.865-1.24 3.061-2.514 8.575-1.828M72.355 5.467c8.08.179 14.472 3.21 18.997 9.009 3.471 4.447-.35 24.686-11.415 42.145l-.336-.424-.14-.175c2.86-4.735 2.3-9.42 1.802-13.574-.204-1.704-.397-3.314-.348-4.827.05-1.602.262-2.977.467-4.306.25-1.638.506-3.333.436-5.332.053-.21.074-.457.046-.75-.18-1.917-2.361-7.652-6.808-12.842-2.432-2.839-5.98-6.016-10.822-8.159 2.083-.433 4.931-.836 8.12-.765M27.14 66.622c-2.234 2.694-3.777 2.177-4.285 2.008-3.306-1.106-7.143-8.114-10.526-19.227-2.927-9.615-4.637-19.285-4.773-21.996-.427-8.575 1.646-14.551 6.162-17.763 7.35-5.226 19.432-2.098 24.287-.511-.07.069-.142.133-.211.203-7.967 8.069-7.778 21.854-7.759 22.697 0 .325.027.785.064 1.418.137 2.319.392 6.634-.29 11.521-.633 4.541.763 8.986 3.83 12.195q.472.494.991.937a205 205 0 0 0-7.49 8.518m8.514-11.391c-2.471-2.587-3.594-6.184-3.08-9.872.72-5.162.454-9.658.311-12.073-.02-.338-.038-.635-.048-.868 1.164-1.035 6.558-3.933 10.404-3.05 1.755.404 2.825 1.603 3.27 3.664 2.301 10.674.304 15.122-1.3 18.697-.33.737-.643 1.433-.91 2.153l-.207.557c-.523 1.407-1.01 2.716-1.312 3.959-2.628-.008-5.184-1.134-7.128-3.168m.404 14.394c-.768-.192-1.458-.526-1.863-.803.339-.16.94-.377 1.984-.593 5.052-1.042 5.832-1.778 7.535-3.947.391-.498.834-1.061 1.447-1.748.914-1.026 1.332-.852 2.09-.537.613.254 1.211 1.026 1.454 1.875.114.401.243 1.163-.178 1.755-3.56 4.997-8.745 4.933-12.47 3.998m26.436 24.668c-6.18 1.328-8.368-1.834-9.81-5.448-.93-2.334-1.388-12.856-1.063-24.477a1.4 1.4 0 0 0-.06-.444 6 6 0 0 0-.173-.821c-.483-1.691-1.659-3.106-3.07-3.692-.56-.233-1.589-.66-2.825-.343.264-1.09.72-2.32 1.217-3.651l.208-.56c.234-.632.528-1.287.838-1.98 1.68-3.74 3.978-8.863 1.483-20.436-.935-4.335-4.056-6.452-8.789-5.96-2.836.294-5.432 1.442-6.727 2.1-.278.141-.532.278-.77.41.361-4.367 1.726-12.53 6.832-17.694C43 8.045 47.281 6.439 52.498 6.526c10.28.168 16.871 5.458 20.591 9.866 3.206 3.799 4.942 7.625 5.635 9.69-5.21-.532-8.753.499-10.55 3.074-3.907 5.601 2.138 16.473 5.044 21.698.533.957.993 1.785 1.137 2.136.946 2.3 2.171 3.835 3.065 4.955.275.343.54.677.743.967-1.578.457-4.412 1.51-4.154 6.779-.208 2.643-1.69 15.02-2.442 19.392-.994 5.776-3.114 7.928-9.074 9.21m25.795-29.6c-1.614.751-4.314 1.315-6.879 1.436-2.833.133-4.275-.319-4.615-.596-.159-3.283 1.06-3.626 2.35-3.99.202-.056.4-.112.59-.179q.179.146.391.287c2.277 1.507 6.339 1.67 12.073.483l.063-.013c-.774.726-2.097 1.699-3.974 2.572" />
+                </svg>
                 <span>PostgreSQL</span>
             </div>
             <!-- MySQL -->
             <div class="stack-item">
-                <img src="https://www.mysql.com/common/logos/logo-mysql-170x115.png" alt="MySQL"
-                    onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 36 36%22><text y=%2228%22 font-size=%2228%22>🐬</text></svg>'" />
+                <svg width="48" height="48" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 100 100">
+                    <g fill="#00546b" clip-path="url(#a)">
+                        <path
+                            d="M92.11 77.066c-5.44-.137-9.657.415-13.194 1.934-1.02.413-2.653.414-2.789 1.726.544.552.612 1.45 1.089 2.209.817 1.38 2.244 3.245 3.536 4.212 1.428 1.104 2.857 2.208 4.353 3.175 2.652 1.657 5.645 2.623 8.23 4.28 1.497.966 2.992 2.21 4.488 3.245.749.552 1.224 1.45 2.177 1.795v-.207c-.477-.622-.613-1.519-1.088-2.21-.68-.69-1.36-1.311-2.04-2.002-1.973-2.692-4.421-5.04-7.074-6.972-2.176-1.52-6.938-3.59-7.821-6.145 0 0-.069-.068-.136-.137 1.496-.138 3.264-.69 4.693-1.105 2.312-.622 4.42-.484 6.8-1.105 1.089-.276 2.177-.621 3.265-.967v-.62c-1.224-1.243-2.108-2.9-3.4-4.074-3.469-3.038-7.278-6.007-11.222-8.492-2.11-1.38-4.83-2.278-7.074-3.452-.816-.414-2.176-.621-2.652-1.312-1.225-1.518-1.905-3.52-2.789-5.315-1.972-3.798-3.877-8.009-5.577-12.013-1.224-2.692-1.972-5.385-3.469-7.87-7.005-11.737-14.622-18.848-26.32-25.82-2.517-1.45-5.51-2.072-8.706-2.83-1.7-.07-3.4-.208-5.1-.278-1.09-.483-2.178-1.794-3.13-2.416C13.284 1.815 3.286-3.57.43 3.541c-1.837 4.487 2.72 8.906 4.284 11.184 1.157 1.588 2.652 3.383 3.469 5.178.476 1.173.611 2.417 1.088 3.66 1.088 3.036 2.108 6.42 3.537 9.25.748 1.45 1.564 2.969 2.516 4.28.544.76 1.496 1.105 1.7 2.348-.951 1.38-1.02 3.452-1.564 5.178-2.449 7.801-1.496 17.466 1.972 23.196 1.088 1.726 3.673 5.524 7.142 4.074 3.06-1.243 2.38-5.178 3.264-8.63.205-.83.069-1.38.476-1.933v.138c.953 1.933 1.904 3.797 2.789 5.73 2.108 3.383 5.78 6.904 8.841 9.252 1.633 1.242 2.925 3.382 4.966 4.142v-.208h-.137c-.408-.621-1.02-.897-1.564-1.38-1.224-1.243-2.585-2.762-3.536-4.143-2.857-3.866-5.374-8.146-7.618-12.565-1.088-2.14-2.04-4.487-2.924-6.627-.409-.83-.409-2.072-1.089-2.485-1.02 1.518-2.516 2.83-3.264 4.694-1.292 2.968-1.428 6.627-1.904 10.424-.273.07-.137 0-.273.14-2.176-.554-2.924-2.832-3.74-4.765-2.041-4.901-2.381-12.772-.613-18.433.477-1.45 2.517-6.006 1.701-7.387-.408-1.312-1.769-2.071-2.517-3.107-.884-1.312-1.836-2.968-2.448-4.418-1.633-3.866-2.449-8.147-4.217-12.013-.816-1.795-2.244-3.659-3.4-5.316-1.293-1.864-2.721-3.176-3.741-5.385-.34-.759-.817-2.002-.272-2.83.136-.553.407-.76.952-.898.884-.76 3.4.207 4.284.621 2.517 1.035 4.625 2.003 6.734 3.452.952.69 1.972 2.003 3.196 2.348h1.429c2.176.483 4.624.138 6.665.759 3.605 1.173 6.87 2.9 9.794 4.764 8.91 5.73 16.255 13.876 21.22 23.61.816 1.588 1.156 3.039 1.904 4.695 1.429 3.383 3.197 6.835 4.625 10.149 1.428 3.244 2.788 6.559 4.829 9.251 1.02 1.45 5.1 2.21 6.937 2.969 1.36.62 3.47 1.174 4.693 1.933 2.312 1.449 4.625 3.107 6.801 4.694 1.089.829 4.489 2.555 4.693 3.935" />
+                        <path
+                            d="M22.737 17.072c-1.156 0-1.972.139-2.788.345v.138h.136c.544 1.105 1.496 1.865 2.176 2.831.544 1.104 1.02 2.21 1.565 3.314.067-.07.135-.138.135-.138.953-.69 1.429-1.795 1.429-3.452-.409-.483-.477-.966-.817-1.45-.407-.69-1.292-1.035-1.836-1.588" />
+                    </g>
+                    <defs>
+                        <clipPath id="a">
+                            <path fill="#fff" d="M0 0h100v100H0z" />
+                        </clipPath>
+                    </defs>
+                </svg>
                 <span>MySQL</span>
             </div>
             <!-- Python -->
             <div class="stack-item">
-                <img src="https://www.python.org/static/community_logos/python-logo-inkscape.svg" alt="Python"
-                    onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 36 36%22><text y=%2228%22 font-size=%2228%22>🐍</text></svg>'" />
+                <svg width="48" height="48" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 100 100">
+                    <g clip-path="url(#a)">
+                        <path fill="url(#b)"
+                            d="M49.866 0c-4.08.02-7.973.367-11.4.974C28.368 2.757 26.537 6.49 26.537 13.376v9.092h23.856v3.03h-32.81c-6.934 0-13.005 4.168-14.904 12.098-2.191 9.086-2.288 14.758 0 24.246 1.695 7.063 5.745 12.095 12.68 12.095h8.203v-10.9c0-7.875 6.812-14.82 14.903-14.82h23.83c6.633 0 11.928-5.463 11.928-12.123V13.377c0-6.466-5.455-11.323-11.928-12.402-4.1-.682-8.352-.993-12.43-.974M36.964 7.314c2.464 0 4.477 2.046 4.477 4.562 0 2.505-2.013 4.53-4.477 4.53-2.473 0-4.476-2.025-4.476-4.53-.001-2.516 2.003-4.562 4.476-4.562" />
+                        <path fill="url(#c)"
+                            d="M77.198 25.498v10.594c0 8.212-6.964 15.125-14.903 15.125h-23.83c-6.527 0-11.928 5.587-11.928 12.124V86.06c0 6.464 5.621 10.268 11.928 12.122 7.551 2.219 14.793 2.621 23.83 0 6.005-1.74 11.927-5.24 11.927-12.122v-9.094H50.394v-3.031h35.758c6.933 0 9.519-4.836 11.93-12.095 2.491-7.473 2.383-14.66 0-24.246-1.714-6.903-4.986-12.097-11.93-12.097zm-13.403 57.53c2.474 0 4.477 2.026 4.477 4.533 0 2.514-2.004 4.56-4.477 4.56-2.464 0-4.476-2.046-4.476-4.56 0-2.507 2.012-4.533 4.476-4.533" />
+                    </g>
+                    <defs>
+                        <linearGradient id="b" x1="-1.392" x2="53.633" y1="2.844" y2="49.769"
+                            gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#5a9fd4" />
+                            <stop offset="1" stop-color="#306998" />
+                        </linearGradient>
+                        <linearGradient id="c" x1="74.335" x2="54.603" y1="78.937" y2="51.265"
+                            gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#ffd43b" />
+                            <stop offset="1" stop-color="#ffe873" />
+                        </linearGradient>
+                        <clipPath id="a">
+                            <path fill="#fff" d="M0 0h100v100H0z" />
+                        </clipPath>
+                    </defs>
+                </svg>
                 <span>Python</span>
             </div>
             <!-- C++ -->
             <div class="stack-item">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/1/18/ISO_C%2B%2B_Logo.svg" alt="C++"
-                    onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 36 36%22><text y=%2228%22 font-size=%2228%22>⚙️</text></svg>'" />
+                <svg width="48" height="48" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 100 100">
+                    <path fill="#5c8dbc"
+                        d="M94.73 29.32c0-1.676-.359-3.158-1.084-4.43-.713-1.25-1.78-2.298-3.21-3.127C78.621 14.95 66.797 8.16 54.987 1.343c-3.183-1.839-6.27-1.772-9.43.093-4.702 2.773-28.243 16.26-35.258 20.323-2.889 1.672-4.295 4.232-4.295 7.559C6 43.016 6.005 56.714 6 70.413c0 1.64.344 3.093 1.037 4.345.713 1.289 1.795 2.366 3.26 3.213 7.014 4.063 30.559 17.55 35.26 20.323 3.16 1.865 6.248 1.932 9.432.093 11.81-6.818 23.635-13.609 35.45-20.42 1.464-.847 2.546-1.925 3.259-3.212.692-1.253 1.036-2.706 1.037-4.346 0 0 0-27.39-.005-41.088" />
+                    <path fill="#1a4674"
+                        d="M50.503 49.732 7.037 74.758c.713 1.289 1.795 2.366 3.26 3.213 7.014 4.063 30.559 17.55 35.26 20.323 3.16 1.866 6.248 1.932 9.432.094 11.81-6.82 23.635-13.61 35.45-20.42 1.464-.848 2.546-1.926 3.259-3.213z" />
+                    <path fill="#1a4674"
+                        d="M37.629 57.145c2.53 4.415 7.284 7.393 12.738 7.393 5.488 0 10.27-3.016 12.786-7.478l-12.65-7.328z" />
+                    <path fill="#1b598e"
+                        d="M94.73 29.321c0-1.677-.359-3.159-1.084-4.43L50.503 49.73l43.195 25.024c.692-1.252 1.036-2.706 1.037-4.346 0 0 0-27.39-.005-41.088" />
+                    <path fill="#fff"
+                        d="M92.355 51.52H88.98v3.376h-3.376V51.52h-3.375v-3.375h3.375V44.77h3.376v3.375h3.375zm-12.316 0h-3.375v3.376h-3.376V51.52h-3.375v-3.375h3.375V44.77h3.376v3.375h3.375z" />
+                    <path fill="#fff"
+                        d="M63.154 57.06c-2.517 4.463-7.299 7.479-12.787 7.479-5.454 0-10.209-2.979-12.738-7.394a14.6 14.6 0 0 1-1.935-7.28c0-8.104 6.57-14.673 14.673-14.673 5.42 0 10.15 2.941 12.691 7.311l12.826-7.385c-5.098-8.8-14.615-14.72-25.516-14.72-16.275 0-29.468 13.193-29.468 29.467 0 5.34 1.42 10.346 3.903 14.665 5.084 8.846 14.63 14.803 25.565 14.803 10.955 0 20.514-5.981 25.592-14.853z" />
+                </svg>
                 <span>C / C++</span>
             </div>
             <!-- JavaScript -->
             <div class="stack-item">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6a/JavaScript-logo.png" alt="JavaScript"
-                    onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 36 36%22><text y=%2228%22 font-size=%2228%22>🟨</text></svg>'" />
+                <svg width="48" height="48" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 100 100">
+                    <g clip-path="url(#a)">
+                        <path fill="#f7df1e" d="M100 0H0v100h100z" />
+                        <path fill="#000"
+                            d="M67.175 78.125c2.014 3.29 4.634 5.707 9.27 5.707 3.893 0 6.38-1.946 6.38-4.635 0-3.222-2.555-4.364-6.84-6.238l-2.35-1.008c-6.781-2.89-11.286-6.508-11.286-14.159 0-7.047 5.37-12.413 13.762-12.413 5.975 0 10.27 2.08 13.365 7.524l-7.317 4.699c-1.612-2.89-3.35-4.027-6.048-4.027-2.752 0-4.497 1.746-4.497 4.027 0 2.819 1.746 3.96 5.778 5.706l2.35 1.006c7.983 3.424 12.491 6.915 12.491 14.762 0 8.46-6.646 13.096-15.571 13.096-8.727 0-14.365-4.16-17.124-9.61zm-33.196.815c1.477 2.619 2.82 4.833 6.048 4.833 3.087 0 5.035-1.208 5.035-5.905V45.916h9.397v32.08c0 9.73-5.705 14.158-14.032 14.158-7.524 0-11.881-3.894-14.097-8.583z" />
+                    </g>
+                    <defs>
+                        <clipPath id="a">
+                            <path fill="#fff" d="M0 0h100v100H0z" />
+                        </clipPath>
+                    </defs>
+                </svg>
                 <span>JavaScript</span>
             </div>
             <!-- Git -->
             <div class="stack-item">
-                <img src="https://git-scm.com/images/logos/downloads/Git-Icon-1788C.png" alt="Git"
-                    onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 36 36%22><text y=%2228%22 font-size=%2228%22>🔀</text></svg>'" />
+                <svg width="48" height="48" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 100 100">
+                    <g clip-path="url(#a)">
+                        <path fill="#de4c36"
+                            d="M98.114 45.544 54.454 1.886a6.44 6.44 0 0 0-9.108 0l-9.066 9.066 11.5 11.501a7.65 7.65 0 0 1 7.869 1.834 7.66 7.66 0 0 1 1.817 7.916L68.55 43.287c2.682-.923 5.776-.326 7.918 1.82a7.66 7.66 0 0 1 0 10.836 7.662 7.662 0 0 1-12.508-8.335L53.623 37.271v27.202a7.663 7.663 0 0 1 2.026 12.288 7.66 7.66 0 0 1-10.836 0 7.663 7.663 0 0 1 2.508-12.51V36.795a7.6 7.6 0 0 1-2.508-1.672 7.66 7.66 0 0 1-1.651-8.377l-11.338-11.34L1.887 45.344a6.44 6.44 0 0 0 0 9.11l43.661 43.659a6.44 6.44 0 0 0 9.108 0l43.458-43.457a6.444 6.444 0 0 0 0-9.11" />
+                    </g>
+                    <defs>
+                        <clipPath id="a">
+                            <path fill="#fff" d="M0 0h100v100H0z" />
+                        </clipPath>
+                    </defs>
+                </svg>
                 <span>Git</span>
             </div>
-            <!-- REST API -->
-            <div class="stack-item">
-                <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect width="36" height="36" rx="8" fill="rgba(0,229,160,0.1)" />
-                    <text x="4" y="24" font-family="monospace" font-size="11" fill="#00e5a0">REST</text>
-                </svg>
-                <span>REST API</span>
-            </div>
+
             <!-- Android Studio -->
             <div class="stack-item">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/9/92/Android_Studio_Trademark.svg"
-                    alt="Android Studio"
-                    onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 36 36%22><text y=%2228%22 font-size=%2228%22>🤖</text></svg>'" />
+                <svg width="48" height="48" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 100 100">
+                    <path fill="#3ddb85"
+                        d="M73.013 64.093a4.17 4.17 0 0 1-4.164-4.166 4.17 4.17 0 0 1 4.164-4.163 4.17 4.17 0 0 1 4.164 4.163 4.17 4.17 0 0 1-4.164 4.166m-46.026 0a4.17 4.17 0 0 1-4.163-4.166 4.17 4.17 0 0 1 4.163-4.163 4.17 4.17 0 0 1 4.164 4.163 4.17 4.17 0 0 1-4.164 4.166m47.52-25.083 8.321-14.414a1.733 1.733 0 0 0-1.947-2.537 1.73 1.73 0 0 0-1.052.806L71.404 37.46C64.96 34.52 57.723 32.88 50 32.88s-14.96 1.639-21.403 4.58l-8.426-14.596a1.733 1.733 0 0 0-3.172.418c-.119.443-.057.915.173 1.313l8.322 14.414C11.204 46.782 1.43 61.249 0 78.34h100c-1.431-17.09-11.205-31.559-25.494-39.33" />
+                </svg>
                 <span>Android Studio</span>
             </div>
-            <!-- VS Code -->
+            <!-- Postman -->
             <div class="stack-item">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/9/9a/Visual_Studio_Code_1.35_icon.svg"
-                    alt="VS Code"
-                    onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 36 36%22><text y=%2228%22 font-size=%2228%22>💻</text></svg>'" />
-                <span>VS Code</span>
+                <svg width="48" height="48" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 100 100">
+                    <g clip-path="url(#a)">
+                        <path fill="#ff6c37"
+                            d="M89.573 19.44a50 50 0 1 0-9.002 70.124c21.844-16.881 25.875-48.273 9-70.125z" />
+                        <path fill="#fff"
+                            d="M66.864 31.858 45.78 53.108l-5.958-6.125c20.75-20.75 22.833-18.875 27.042-15.125" />
+                        <path fill="#ff6c37"
+                            d="M45.78 53.689a.75.75 0 0 1-.5-.208l-6-6a.75.75 0 0 1 0-1.042c20.459-20.458 23.25-19.5 28.084-15.125a.67.67 0 0 1 .25.542.59.59 0 0 1-.208.543L46.323 53.483a.8.8 0 0 1-.542.208zm-4.916-6.708 4.917 4.917 20-20a4.5 4.5 0 0 0-5.918-1c-3.624 1.626-9.457 6.583-19 16.083" />
+                        <path fill="#fff"
+                            d="m51.823 58.983-5.75-5.875 21.083-20.834c5.667 5.542-2.75 14.792-15.333 26.707z" />
+                        <path fill="#ff6c37"
+                            d="M51.823 59.733a.9.9 0 0 1-.5-.208l-5.875-5.75a.88.88 0 0 1 0-.667.8.8 0 0 1 0-.542l21.083-21.083a.79.79 0 0 1 1.083 0 6.46 6.46 0 0 1 2.082 4.958c0 5.625-6.417 12.707-17.332 23.042a.88.88 0 0 1-.542.25zm-4.667-6.625 4.708 4.706c8.333-7.875 16.292-16 16.332-21.5a4.75 4.75 0 0 0-1.082-3.208z" />
+                        <path fill="#fff"
+                            d="m39.989 47.108 4.167 4.167a.25.25 0 0 1 0 .375l-8.792 1.875a.833.833 0 0 1-.75-1.417l5.125-5.083s.167 0 .25.083" />
+                        <path fill="#ff6c37"
+                            d="M35.156 54.358a1.62 1.62 0 0 1-1.375-.792 1.585 1.585 0 0 1 .292-1.875l5.083-5.125a1 1 0 0 1 1.333 0l4.167 4.167a.92.92 0 0 1 .25.917.97.97 0 0 1-.708.667l-8.792 1.875zm4.667-6.333-4.708 4.708 7.792-1.667z" />
+                        <path fill="#fff"
+                            d="M78.073 20.149a8.087 8.087 0 0 0-10.916-.286 8.08 8.08 0 0 0-1.24 10.848A8.086 8.086 0 0 0 76.615 32.9l-5.667-5.667z" />
+                        <path fill="#ff6c37"
+                            d="M72.448 34.814a8.83 8.83 0 0 1-8.056-5.481 8.86 8.86 0 0 1 1.875-9.56 8.92 8.92 0 0 1 12.5 0 .71.71 0 0 1 .184.841.7.7 0 0 1-.184.244l-6.75 6.375 5.125 5.042a.7.7 0 0 1 .208.625.75.75 0 0 1-.333.542 9.06 9.06 0 0 1-4.583 1.375zm0-16.167a7.3 7.3 0 0 0-6.74 4.531 7.36 7.36 0 0 0 1.574 7.97 7.29 7.29 0 0 0 8.083 1.541l-4.917-4.917a.667.667 0 0 1 0-1.042l6.5-6.542a7.48 7.48 0 0 0-4.5-1.542z" />
+                        <path fill="#fff"
+                            d="m78.198 20.274-7.125 7.083 5.667 5.667a8.6 8.6 0 0 0 1.583-1.167 8.333 8.333 0 0 0-.125-11.583" />
+                        <path fill="#ff6c37"
+                            d="M76.614 33.649a.63.63 0 0 1-.5-.208l-5.668-5.667a.667.667 0 0 1 0-1.042l7.083-6.958a.75.75 0 0 1 1.25 0 8.75 8.75 0 0 1 0 12.5c-.49.52-1.052.969-1.667 1.333a.67.67 0 0 1-.5.042zm-4.583-6.416 4.707 4.708q.486-.341.918-.75a7.38 7.38 0 0 0 2.167-5.208 7.16 7.16 0 0 0-1.792-4.75z" />
+                        <path fill="#fff"
+                            d="M67.739 32.733a3.043 3.043 0 0 0-4.168 0L44.698 51.564l3.125 3.167 19.958-17.5a3.09 3.09 0 0 0-.042-4.5z" />
+                        <path fill="#ff6c37"
+                            d="M47.656 55.483a.75.75 0 0 1-.5-.208l-3.167-3.167a.75.75 0 0 1 0-1.042l18.875-18.792a3.834 3.834 0 0 1 6.542 2.833 3.92 3.92 0 0 1-1.292 2.75l-19.958 17.5a.7.7 0 0 1-.5.124zm-2.208-3.919 2.083 2.125 19.583-17.042a2.3 2.3 0 0 0 .792-1.667 2.24 2.24 0 0 0-.708-1.708 2.333 2.333 0 0 0-3.292 0z" />
+                        <path fill="#fff"
+                            d="M30.073 73.024a.42.42 0 0 0 0 .5l.833 3.624a1.07 1.07 0 0 1-.519 1.094 1.02 1.02 0 0 1-1.19-.12l-5.708-5.5 17.792-17.933h6.167l4.167 4.167a94.6 94.6 0 0 1-21.542 14.167" />
+                        <path fill="#ff6c37"
+                            d="M29.698 79.148a1.76 1.76 0 0 1-1.25-.542l-5.457-5.457a.667.667 0 0 1 0-1.043L40.906 54.15c.1-.107.231-.18.375-.208h6.208a.75.75 0 0 1 .5 0l4.167 4.167a.67.67 0 0 1 .208.583.67.67 0 0 1-.25.542l-.333.292a102 102 0 0 1-21.375 13.708l.792 3.375a1.798 1.798 0 0 1-1.707 2.208zm-5.082-6.542 4.915 4.958a.25.25 0 0 0 .333 0 .25.25 0 0 0 0-.292l-.833-3.625a1.16 1.16 0 0 1 .625-1.333A102.4 102.4 0 0 0 50.49 58.897l-3.417-3.417H41.49z" />
+                        <path fill="#fff"
+                            d="m19.198 76.898 4.167-4.167 6.418 6.417-10.208-.707A.834.834 0 0 1 19.2 76.9z" />
+                        <path fill="#ff6c37"
+                            d="m29.906 79.773-10.167-.708a1.61 1.61 0 0 1-1.334-1.02 1.59 1.59 0 0 1 .334-1.647l4.167-4.167a.75.75 0 0 1 1.042 0l6.375 6.375a.71.71 0 0 1 0 .833.8.8 0 0 1-.417.333zm-10.167-2.332 8.333.542-4.583-4.293z" />
+                        <path fill="#fff" d="m48.03 55.192-8.416 1.293 4.875-4.833z" />
+                        <path fill="#ff6c37"
+                            d="M39.614 57.274a.71.71 0 0 1-.667-.418.7.7 0 0 1 0-.832l4.832-4.876a.79.79 0 0 1 1.083 0l3.544 3.541a.7.7 0 0 1 0 .75.74.74 0 0 1-.583.542l-8.333 1.293zm4.875-4.543L41.78 55.44l4.667-.708z" />
+                        <path fill="#fff" d="m48.03 55.19-5.874.75a.75.75 0 0 1-.708-1.25l3.042-3.043z" />
+                        <path fill="#ff6c37"
+                            d="M41.989 56.733a1.54 1.54 0 0 1-1.333-.792 1.5 1.5 0 0 1 .25-1.793l3.042-3.042a.79.79 0 0 1 1.083 0l3.542 3.542a.75.75 0 0 1-.458 1.293l-5.833.75zm0-1.542 4.417-.543-1.958-1.957-2.5 2.5zm36.25-30.125a.625.625 0 0 0-.793-.25.58.58 0 0 0-.29.344.6.6 0 0 0 .04.448c.292.614.211 1.34-.208 1.875a.53.53 0 0 0-.156.395.6.6 0 0 0 .156.396.45.45 0 0 0 .333 0 .55.55 0 0 0 .542-.168 2.88 2.88 0 0 0 .375-3.042z" />
+                    </g>
+                    <defs>
+                        <clipPath id="a">
+                            <path fill="#fff" d="M0 0h100v100H0z" />
+                        </clipPath>
+                    </defs>
+                </svg>
+                <span>Postman</span>
             </div>
         </div>
     </section>
 
     <!-- PROJECTS -->
-    <section id="projects" style="max-width:1200px; margin:0 auto;">
+    <section id="projects">
         <p class="section-label reveal">/ Projects</p>
         <h2 class="section-title reveal">Things I've<br>actually shipped.</h2>
 
         <div class="projects-grid">
-
             <div class="project-card reveal">
                 <div class="project-num">01</div>
                 <div class="project-name">SwiftTransit</div>
@@ -1005,12 +1153,11 @@
                         class="tag">Sensors</span>
                 </div>
             </div>
-
         </div>
     </section>
 
     <!-- PUBLICATION -->
-    <section style="max-width:1200px; margin:0 auto;">
+    <section>
         <p class="section-label reveal">/ Research</p>
         <h2 class="section-title reveal">Published at<br>IEEE.</h2>
 
@@ -1024,7 +1171,7 @@
     </section>
 
     <!-- AWARDS -->
-    <section style="max-width:1200px; margin:0 auto;">
+    <section>
         <p class="section-label reveal">/ Recognition</p>
         <h2 class="section-title reveal">A few things<br>to brag about.</h2>
 
@@ -1058,8 +1205,9 @@
         <p>I'm open to full-time roles, freelance projects, and interesting collaborations.<br>Drop a line — I reply
             fast.</p>
         <div class="contact-links">
-            <a href="mailto:mohammadtohasiddique@gmail.com" class="contact-link primary">✉
-                mohammadtohasiddique@gmail.com</a>
+            <a href="/cdn-cgi/l/email-protection#9bf6f4f3faf6f6faffeff4f3fae8f2fffff2eaeefedbfcf6faf2f7b5f8f4f6"
+                class="contact-link primary">✉ <span class="__cf_email__"
+                    data-cfemail="4c2123242d21212d283823242d3f252828253d39290c2b212d2520622f2321">mohammadtohasiddique@gmail.com</span></a>
             <a href="https://github.com/e4gl3x" target="_blank" class="contact-link">GitHub ↗</a>
             <a href="https://linkedin.com/in/mohammadtohasiddique" target="_blank" class="contact-link">LinkedIn ↗</a>
             <a href="tel:+8801580662846" class="contact-link">+880 1580662846</a>
@@ -1068,9 +1216,10 @@
 
     <footer>
         <span>© 2026 Md. Toha Siddique</span>
-        <span>Built with intent · Dhaka, Bangladesh</span>
+        <span>Dhaka, Bangladesh</span>
     </footer>
 
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
     <script>
         // CURSOR
         const cursor = document.getElementById('cursor');
@@ -1078,34 +1227,49 @@
         const ring = document.getElementById('cursorRing');
         let mx = 0, my = 0, rx = 0, ry = 0;
         document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
-        function animCursor() {
-            rx += (mx - rx) * 0.18;
-            ry += (my - ry) * 0.18;
-            dot.style.left = mx + 'px'; dot.style.top = my + 'px';
-            ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
-            requestAnimationFrame(animCursor);
+        function anim() {
+            rx += (mx - rx) * 0.2;
+            ry += (my - ry) * 0.2;
+            dot.style.left = mx + 'px';
+            dot.style.top = my + 'px';
+            ring.style.left = rx + 'px';
+            ring.style.top = ry + 'px';
+            requestAnimationFrame(anim);
         }
-        animCursor();
-        document.querySelectorAll('a, button, .stack-item').forEach(el => {
-            el.addEventListener('mouseenter', () => { ring.style.width = '52px'; ring.style.height = '52px'; ring.style.borderColor = 'rgba(0,229,160,0.8)'; });
-            el.addEventListener('mouseleave', () => { ring.style.width = '32px'; ring.style.height = '32px'; ring.style.borderColor = 'rgba(0,229,160,0.4)'; });
+        anim();
+
+        document.querySelectorAll('a, .stack-item, .btn, .project-card, .exp-card').forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                ring.style.width = '48px';
+                ring.style.height = '48px';
+                ring.style.borderColor = '#22d3ee';
+                ring.style.opacity = '0.9';
+            });
+            el.addEventListener('mouseleave', () => {
+                ring.style.width = '36px';
+                ring.style.height = '36px';
+                ring.style.borderColor = '#67e8f9';
+                ring.style.opacity = '0.25';
+            });
         });
 
         // NAVBAR SCROLL
         window.addEventListener('scroll', () => {
-            document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 40);
+            document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 80);
         });
 
         // SCROLL REVEAL
         const reveals = document.querySelectorAll('.reveal');
-        const obs = new IntersectionObserver(entries => {
-            entries.forEach((e, i) => {
-                if (e.isIntersecting) {
-                    setTimeout(() => e.target.classList.add('visible'), i * 60);
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, i) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.classList.add('visible');
+                    }, i * 80);
                 }
             });
         }, { threshold: 0.1 });
-        reveals.forEach(r => obs.observe(r));
+        reveals.forEach(el => observer.observe(el));
     </script>
 </body>
 
