@@ -8,768 +8,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
         rel="stylesheet" />
-    <style>
-        :root {
-            --bg: #0a0c12;
-            --surface: #12151c;
-            --border: rgba(255, 255, 255, 0.08);
-            --accent: #67e8f9;
-            --accent-glow: #22d3ee;
-            --text: #f8fafc;
-            --muted: #8b9db0;
-            --glass: rgba(255, 255, 255, 0.03);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            background: var(--bg);
-            color: var(--text);
-            font-family: 'JetBrains Mono', monospace;
-            overflow-x: hidden;
-            cursor: none;
-            position: relative;
-        }
-
-        body::before {
-            content: "";
-            position: fixed;
-            inset: 0;
-            background-image: 
-                url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-            opacity: 0.04;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        /* CURSOR */
-        .cursor {
-            position: fixed;
-            top: 0;
-            left: 0;
-            pointer-events: none;
-            z-index: 9999;
-        }
-
-        .cursor-dot {
-            width: 6px;
-            height: 6px;
-            background: var(--accent);
-            border-radius: 50%;
-            position: absolute;
-            transform: translate(-50%, -50%);
-            transition: transform 0.12s cubic-bezier(0.23, 1, 0.32, 1);
-        }
-
-        .cursor-ring {
-            width: 36px;
-            height: 36px;
-            border: 1.5px solid var(--accent-glow);
-            border-radius: 50%;
-            position: absolute;
-            transform: translate(-50%, -50%);
-            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-            opacity: 0.25;
-        }
-
-        /* NAV — floating pill */
-        nav {
-            position: fixed;
-            top: 28px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1000;
-            background: rgba(18, 21, 28, 0.75);
-            backdrop-filter: blur(24px);
-            border: 1px solid var(--border);
-            border-radius: 9999px;
-            padding: 12px 32px;
-            display: flex;
-            align-items: center;
-            gap: 48px;
-            box-shadow: 0 8px 32px -12px rgba(103, 232, 249, 0.2);
-            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-        }
-
-        nav.scrolled {
-            top: 16px;
-            padding: 10px 28px;
-            box-shadow: 0 4px 20px -8px rgba(103, 232, 249, 0.3);
-        }
-
-        .nav-logo {
-            font-family: 'Space Grotesk', sans-serif;
-            font-weight: 600;
-            font-size: 21px;
-            letter-spacing: -1px;
-            color: var(--text);
-            text-decoration: none;
-        }
-
-        .nav-logo span {
-            color: var(--accent);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 32px;
-            list-style: none;
-        }
-
-        .nav-links a {
-            color: var(--muted);
-            font-size: 13px;
-            font-weight: 500;
-            letter-spacing: 0.8px;
-            text-decoration: none;
-            transition: color 0.3s ease;
-            position: relative;
-        }
-
-        .nav-links a:hover {
-            color: var(--accent);
-        }
-
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -1px;
-            left: 0;
-            width: 0;
-            height: 1px;
-            background: var(--accent);
-            transition: width 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-        }
-
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-
-        /* HERO */
-        #hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0 48px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero-bg {
-            position: absolute;
-            inset: 0;
-            background:
-                radial-gradient(circle at 20% 30%, rgba(103, 232, 249, 0.08) 0%, transparent 50%),
-                radial-gradient(circle at 80% 70%, rgba(34, 211, 238, 0.08) 0%, transparent 50%),
-                radial-gradient(circle at 50% 50%, rgba(10, 12, 18, 1) 0%, transparent 100%);
-            pointer-events: none;
-            animation: subtleShift 25s ease infinite;
-        }
-
-        @keyframes subtleShift {
-            0% {
-                transform: translate(0, 0);
-            }
-
-            50% {
-                transform: translate(8px, -8px);
-            }
-
-            100% {
-                transform: translate(0, 0);
-            }
-        }
-
-        .hero-content {
-            max-width: 920px;
-            text-align: center;
-            z-index: 2;
-        }
-
-        .hero-tag {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 24px;
-            border-radius: 9999px;
-            border: 1px solid var(--border);
-            background: var(--glass);
-            color: var(--muted);
-            font-size: 12px;
-            letter-spacing: 2px;
-            margin-bottom: 24px;
-            transition: all 0.4s ease;
-        }
-
-        .hero-tag:hover {
-            border-color: var(--accent);
-            color: var(--text);
-            transform: scale(1.05);
-        }
-
-        .hero-tag .dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--accent);
-            animation: blink 2s infinite;
-        }
-
-        @keyframes blink {
-
-            0%,
-            100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0.3;
-            }
-        }
-
-        .hero-name {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: clamp(64px, 9vw, 120px);
-            font-weight: 700;
-            line-height: 0.92;
-            letter-spacing: -4px;
-            margin-bottom: 32px;
-            max-width: 1000px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .hero-name .line2 {
-            display: block;
-            font-style: italic;
-            font-weight: 500;
-            font-size: clamp(48px, 6vw, 82px);
-            letter-spacing: -3px;
-            color: transparent;
-            -webkit-text-stroke: 1.5px rgba(103, 232, 249, 0.25);
-        }
-
-        .hero-name .accent {
-            color: var(--accent);
-            -webkit-text-stroke: 0;
-            text-shadow: 0 0 30px rgba(103, 232, 249, 0.3);
-        }
-
-        .hero-sub {
-            font-size: 15px;
-            max-width: 800px;
-            margin: 28px auto 44px;
-            color: var(--muted);
-            line-height: 1.8;
-            text-align: justify;
-        }
-
-        .hero-sub strong {
-            color: var(--text);
-        }
-
-        .hero-cta {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            padding: 18px 36px;
-            border-radius: 9999px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 13px;
-            font-weight: 600;
-            letter-spacing: 1.2px;
-            text-transform: uppercase;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-        }
-
-        .btn-primary {
-            background: var(--accent);
-            color: #0a0c12;
-            box-shadow: 0 0 0 0 rgba(103, 232, 249, 0.4);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 40px -10px var(--accent);
-        }
-
-        .btn-ghost {
-            border: 2px solid var(--border);
-            color: var(--muted);
-        }
-
-        .btn-ghost:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-            transform: translateY(-3px);
-        }
-
-        /* SECTIONS */
-        section {
-            padding: 140px 48px 100px;
-            max-width: 1240px;
-            margin: 0 auto;
-        }
-
-        .section-label {
-            font-size: 11px;
-            letter-spacing: 3px;
-            color: var(--accent);
-            margin-bottom: 12px;
-            font-weight: 500;
-        }
-
-        .section-title {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: clamp(42px, 6vw, 64px);
-            font-weight: 600;
-            line-height: 1.05;
-            letter-spacing: -2px;
-            margin-bottom: 80px;
-        }
-
-        /* EXPERIENCE */
-        .exp-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 48px;
-            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-        }
-
-        .exp-card:hover {
-            border-color: var(--accent);
-            transform: translateY(-12px);
-            box-shadow: 25px 25px 50px -15px rgba(103, 232, 249, 0.15);
-        }
-
-        .exp-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-
-        .exp-role {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 24px;
-            font-weight: 600;
-        }
-
-        .exp-date {
-            background: rgba(103, 232, 249, 0.1);
-            color: var(--accent);
-            padding: 6px 18px;
-            border-radius: 9999px;
-            font-size: 12px;
-            font-weight: 500;
-        }
-
-        .exp-company {
-            font-size: 13px;
-            color: var(--muted);
-            margin-bottom: 28px;
-        }
-
-        .exp-bullets {
-            list-style: none;
-        }
-
-        .exp-bullets li {
-            padding-left: 24px;
-            position: relative;
-            margin-bottom: 12px;
-            color: var(--muted);
-            font-size: 14px;
-            line-height: 1.75;
-        }
-
-        .exp-bullets li::before {
-            content: '◆';
-            position: absolute;
-            left: 0;
-            color: var(--accent);
-            font-size: 10px;
-            top: 4px;
-        }
-
-        .exp-tags {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 32px;
-        }
-
-        .tag {
-            background: rgba(103, 232, 249, 0.1);
-            color: var(--accent);
-            padding: 6px 16px;
-            border-radius: 9999px;
-            font-size: 12px;
-            font-weight: 500;
-        }
-
-        /* STACK */
-        .stack-grid {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 20px;
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-
-        .stack-item {
-            flex: 0 1 150px;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 20px 12px;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-            cursor: default;
-            backdrop-filter: blur(8px);
-        }
-
-        @media (max-width: 1100px) {
-            .stack-item {
-                flex: 0 1 calc(20% - 20px);
-            }
-        }
-
-        @media (max-width: 850px) {
-            .stack-item {
-                flex: 0 1 calc(33.33% - 20px);
-            }
-        }
-
-        @media (max-width: 500px) {
-            .stack-item {
-                flex: 0 1 calc(50% - 20px);
-            }
-        }
-
-        .stack-item:hover {
-            border-color: var(--accent);
-            transform: scale(1.08) rotate(2deg);
-            box-shadow: 0 20px 30px -15px var(--accent);
-        }
-
-        .stack-item svg {
-            width: 48px;
-            height: 48px;
-            margin-bottom: 16px;
-            transition: filter 0.3s ease;
-        }
-
-        .stack-item:hover svg {
-            filter: brightness(1.2) drop-shadow(0 0 12px var(--accent));
-        }
-
-        .stack-item span {
-            font-size: 11px;
-            font-weight: 500;
-            letter-spacing: 1.5px;
-            color: var(--muted);
-        }
-
-        /* PROJECTS */
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-            gap: 32px;
-        }
-
-        .project-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 40px;
-            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .project-card:hover {
-            transform: translateY(-14px);
-            border-color: var(--accent);
-        }
-
-        .project-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 40%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(103, 232, 249, 0.15), transparent);
-            transition: left 0.8s;
-        }
-
-        .project-card:hover::before {
-            left: 120%;
-        }
-
-        .project-num {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 82px;
-            font-weight: 700;
-            color: rgba(103, 232, 249, 0.06);
-            position: absolute;
-            top: 20px;
-            right: 24px;
-            pointer-events: none;
-        }
-
-        .project-name {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 22px;
-            font-weight: 600;
-            margin-bottom: 12px;
-        }
-
-        .project-desc {
-            color: var(--muted);
-            line-height: 1.75;
-            font-size: 14px;
-            margin-bottom: 24px;
-        }
-
-        /* PUBLICATION */
-        .pub-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 40px;
-            display: flex;
-            gap: 32px;
-            align-items: flex-start;
-            transition: border-color 0.4s ease;
-        }
-
-        .pub-card:hover {
-            border-color: var(--accent);
-        }
-
-        .pub-icon {
-            width: 56px;
-            height: 56px;
-            flex-shrink: 0;
-            background: rgba(103, 232, 249, 0.1);
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-        }
-
-        .pub-title {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 20px;
-            font-weight: 600;
-            line-height: 1.4;
-            margin-bottom: 10px;
-        }
-
-        .pub-venue {
-            font-size: 12px;
-            color: var(--accent);
-            letter-spacing: 1px;
-        }
-
-        /* AWARDS */
-        .awards-list {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .award-item {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 24px 32px;
-            transition: border-color 0.4s ease;
-        }
-
-        .award-item:hover {
-            border-color: var(--accent);
-        }
-
-        .award-medal {
-            font-size: 24px;
-        }
-
-        .award-text {
-            font-size: 14px;
-            color: var(--muted);
-            line-height: 1.6;
-        }
-
-        /* CTA */
-        #cta {
-            padding: 160px 48px;
-            text-align: center;
-            border-top: 1px solid var(--border);
-        }
-
-        #cta .big-text {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: clamp(52px, 8vw, 92px);
-            font-weight: 700;
-            line-height: 1;
-            letter-spacing: -3px;
-            margin-bottom: 32px;
-        }
-
-        #cta .big-text em {
-            color: var(--accent);
-            font-style: normal;
-        }
-
-        #cta p {
-            max-width: 520px;
-            margin: 0 auto 48px;
-            color: var(--muted);
-            font-size: 15px;
-            line-height: 1.7;
-        }
-
-        .contact-links {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 16px;
-            justify-content: center;
-        }
-
-        .contact-link {
-            padding: 16px 32px;
-            border-radius: 9999px;
-            border: 1px solid var(--border);
-            color: var(--muted);
-            font-size: 13px;
-            font-weight: 500;
-            text-decoration: none;
-            transition: all 0.4s ease;
-        }
-
-        .contact-link:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-            transform: scale(1.05);
-        }
-
-        .contact-link.primary {
-            background: var(--accent);
-            color: #0a0c12;
-            border-color: var(--accent);
-        }
-
-        .contact-link.primary:hover {
-            box-shadow: 0 12px 32px rgba(103, 232, 249, 0.35);
-            transform: translateY(-3px) scale(1.03);
-        }
-
-        footer {
-            padding: 32px 48px;
-            border-top: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            font-size: 12px;
-            color: var(--muted);
-            flex-wrap: wrap;
-            gap: 16px;
-        }
-
-        /* SCROLL REVEAL */
-        .reveal {
-            opacity: 0;
-            transform: translateY(60px);
-            transition: all 1s cubic-bezier(0.23, 1, 0.32, 1);
-        }
-
-        .reveal.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        @keyframes fadeUp {
-            from {
-                opacity: 0;
-                transform: translateY(24px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @media (max-width: 768px) {
-            nav {
-                padding: 12px 20px;
-                gap: 24px;
-                top: 16px;
-            }
-
-            #hero {
-                padding: 0 24px;
-            }
-
-            section {
-                padding: 100px 24px 80px;
-            }
-
-            #cta {
-                padding: 100px 24px;
-            }
-
-            .hero-name {
-                letter-spacing: -2px;
-            }
-
-            .pub-card {
-                flex-direction: column;
-            }
-
-            footer {
-                padding: 20px 24px;
-            }
-
-            .nav-links {
-                display: none;
-            }
-
-            .projects-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
@@ -783,7 +22,12 @@
     <!-- NAV -->
     <nav id="navbar">
         <a href="#" class="nav-logo">Toha<span>.</span></a>
-        <ul class="nav-links">
+        <button class="menu-toggle" id="menuToggle" aria-label="Toggle Menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <ul class="nav-links" id="navLinks">
             <li><a href="#experience">Experience</a></li>
             <li><a href="#stack">Tech Stack</a></li>
             <li><a href="#projects">Projects</a></li>
@@ -830,7 +74,7 @@ Beyond development, I have a background in competitive programming, with a highe
             </div>
             <div class="exp-company">A1QA · Bangladesh</div>
             <ul class="exp-bullets">
-                <li>Work on Software Testing methodologis, debugginh, bug fixing, bug reporting <br><br> Using tools like Jira, Postman, etc.</li>
+                <li>Worked on software testing methodologies, debugging, bug fixing, and bug reporting. <br><br> Using tools like Jira, Postman, etc.</li>
             </ul>
             <div class="exp-tags">
                 <span class="tag">Software Testing</span>
@@ -871,26 +115,26 @@ Beyond development, I have a background in competitive programming, with a highe
             <!-- Flutter -->
             <div class="stack-item">
                 <svg width="48" height="48" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 100 100">
-                    <g clip-path="url(#a)">
+                    <g clip-path="url(#flutter-a)">
                         <path fill="#42a5f5" fill-opacity=".8"
                             d="M25.399 65.395 10 49.996 60 0h30.794zm65.395-19.259H60L48.465 57.671l15.399 15.4" />
                         <path fill="#0d47a1" d="M48.465 88.465 60 100h30.794l-26.93-26.93" />
                         <path fill="#42a5f5" d="M33.103 73.078 48.477 57.7l15.375 15.375-15.375 15.379z" />
-                        <path fill="url(#b)" d="m48.477 88.453 15.375-15.375 2.146 2.146L50.623 90.6z" />
-                        <path fill="url(#c)" d="m48.465 88.465 22.848-7.894-7.449-7.505" />
+                        <path fill="url(#flutter-b)" d="m48.477 88.453 15.375-15.375 2.146 2.146L50.623 90.6z" />
+                        <path fill="url(#flutter-c)" d="m48.465 88.465 22.848-7.894-7.449-7.505" />
                     </g>
                     <defs>
-                        <linearGradient id="b" x1="56.167" x2="58.314" y1="80.763" y2="82.909"
+                        <linearGradient id="flutter-b" x1="56.167" x2="58.314" y1="80.763" y2="82.909"
                             gradientUnits="userSpaceOnUse">
                             <stop offset=".2" stop-opacity=".15" />
                             <stop offset=".85" stop-color="#616161" stop-opacity=".01" />
                         </linearGradient>
-                        <linearGradient id="c" x1="48.471" x2="71.318" y1="80.766" y2="80.766"
+                        <linearGradient id="flutter-c" x1="48.471" x2="71.318" y1="80.766" y2="80.766"
                             gradientUnits="userSpaceOnUse">
                             <stop offset=".2" stop-opacity=".55" />
                             <stop offset=".85" stop-color="#616161" stop-opacity=".01" />
                         </linearGradient>
-                        <clipPath id="a">
+                        <clipPath id="flutter-a">
                             <path fill="#fff" d="M0 0h100v100H0z" />
                         </clipPath>
                     </defs>
@@ -900,8 +144,8 @@ Beyond development, I have a background in competitive programming, with a highe
             <!-- Dart -->
             <div class="stack-item">
                 <svg width="48" height="48" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 100 100">
-                    <g clip-path="url(#a)">
-                        <g clip-path="url(#b)">
+                    <g clip-path="url(#dart-a)">
+                        <g clip-path="url(#dart-b)">
                             <path fill="#00c4b3"
                                 d="m26.878 27.058-6.425-6.425v46.335l.09 2.171c0 .996.181 2.172.543 3.349l50.86 17.918 12.67-5.61z" />
                             <path fill="#22d3c5"
@@ -917,10 +161,10 @@ Beyond development, I have a background in competitive programming, with a highe
                         </g>
                     </g>
                     <defs>
-                        <clipPath id="a">
+                        <clipPath id="dart-a">
                             <path fill="#fff" d="M0 0h100v100H0z" />
                         </clipPath>
-                        <clipPath id="b">
+                        <clipPath id="dart-b">
                             <path fill="#fff" d="M0 0h100v100H0z" />
                         </clipPath>
                     </defs>
@@ -956,14 +200,14 @@ Beyond development, I have a background in competitive programming, with a highe
             <!-- MySQL -->
             <div class="stack-item">
                 <svg width="48" height="48" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 100 100">
-                    <g fill="#00546b" clip-path="url(#a)">
+                    <g fill="#00546b" clip-path="url(#mysql-a)">
                         <path
                             d="M92.11 77.066c-5.44-.137-9.657.415-13.194 1.934-1.02.413-2.653.414-2.789 1.726.544.552.612 1.45 1.089 2.209.817 1.38 2.244 3.245 3.536 4.212 1.428 1.104 2.857 2.208 4.353 3.175 2.652 1.657 5.645 2.623 8.23 4.28 1.497.966 2.992 2.21 4.488 3.245.749.552 1.224 1.45 2.177 1.795v-.207c-.477-.622-.613-1.519-1.088-2.21-.68-.69-1.36-1.311-2.04-2.002-1.973-2.692-4.421-5.04-7.074-6.972-2.176-1.52-6.938-3.59-7.821-6.145 0 0-.069-.068-.136-.137 1.496-.138 3.264-.69 4.693-1.105 2.312-.622 4.42-.484 6.8-1.105 1.089-.276 2.177-.621 3.265-.967v-.62c-1.224-1.243-2.108-2.9-3.4-4.074-3.469-3.038-7.278-6.007-11.222-8.492-2.11-1.38-4.83-2.278-7.074-3.452-.816-.414-2.176-.621-2.652-1.312-1.225-1.518-1.905-3.52-2.789-5.315-1.972-3.798-3.877-8.009-5.577-12.013-1.224-2.692-1.972-5.385-3.469-7.87-7.005-11.737-14.622-18.848-26.32-25.82-2.517-1.45-5.51-2.072-8.706-2.83-1.7-.07-3.4-.208-5.1-.278-1.09-.483-2.178-1.794-3.13-2.416C13.284 1.815 3.286-3.57.43 3.541c-1.837 4.487 2.72 8.906 4.284 11.184 1.157 1.588 2.652 3.383 3.469 5.178.476 1.173.611 2.417 1.088 3.66 1.088 3.036 2.108 6.42 3.537 9.25.748 1.45 1.564 2.969 2.516 4.28.544.76 1.496 1.105 1.7 2.348-.951 1.38-1.02 3.452-1.564 5.178-2.449 7.801-1.496 17.466 1.972 23.196 1.088 1.726 3.673 5.524 7.142 4.074 3.06-1.243 2.38-5.178 3.264-8.63.205-.83.069-1.38.476-1.933v.138c.953 1.933 1.904 3.797 2.789 5.73 2.108 3.383 5.78 6.904 8.841 9.252 1.633 1.242 2.925 3.382 4.966 4.142v-.208h-.137c-.408-.621-1.02-.897-1.564-1.38-1.224-1.243-2.585-2.762-3.536-4.143-2.857-3.866-5.374-8.146-7.618-12.565-1.088-2.14-2.04-4.487-2.924-6.627-.409-.83-.409-2.072-1.089-2.485-1.02 1.518-2.516 2.83-3.264 4.694-1.292 2.968-1.428 6.627-1.904 10.424-.273.07-.137 0-.273.14-2.176-.554-2.924-2.832-3.74-4.765-2.041-4.901-2.381-12.772-.613-18.433.477-1.45 2.517-6.006 1.701-7.387-.408-1.312-1.769-2.071-2.517-3.107-.884-1.312-1.836-2.968-2.448-4.418-1.633-3.866-2.449-8.147-4.217-12.013-.816-1.795-2.244-3.659-3.4-5.316-1.293-1.864-2.721-3.176-3.741-5.385-.34-.759-.817-2.002-.272-2.83.136-.553.407-.76.952-.898.884-.76 3.4.207 4.284.621 2.517 1.035 4.625 2.003 6.734 3.452.952.69 1.972 2.003 3.196 2.348h1.429c2.176.483 4.624.138 6.665.759 3.605 1.173 6.87 2.9 9.794 4.764 8.91 5.73 16.255 13.876 21.22 23.61.816 1.588 1.156 3.039 1.904 4.695 1.429 3.383 3.197 6.835 4.625 10.149 1.428 3.244 2.788 6.559 4.829 9.251 1.02 1.45 5.1 2.21 6.937 2.969 1.36.62 3.47 1.174 4.693 1.933 2.312 1.449 4.625 3.107 6.801 4.694 1.089.829 4.489 2.555 4.693 3.935" />
                         <path
                             d="M22.737 17.072c-1.156 0-1.972.139-2.788.345v.138h.136c.544 1.105 1.496 1.865 2.176 2.831.544 1.104 1.02 2.21 1.565 3.314.067-.07.135-.138.135-.138.953-.69 1.429-1.795 1.429-3.452-.409-.483-.477-.966-.817-1.45-.407-.69-1.292-1.035-1.836-1.588" />
                     </g>
                     <defs>
-                        <clipPath id="a">
+                        <clipPath id="mysql-a">
                             <path fill="#fff" d="M0 0h100v100H0z" />
                         </clipPath>
                     </defs>
@@ -1015,13 +259,13 @@ Beyond development, I have a background in competitive programming, with a highe
             <!-- JavaScript -->
             <div class="stack-item">
                 <svg width="48" height="48" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 100 100">
-                    <g clip-path="url(#a)">
+                    <g clip-path="url(#js-a)">
                         <path fill="#f7df1e" d="M100 0H0v100h100z" />
                         <path fill="#000"
                             d="M67.175 78.125c2.014 3.29 4.634 5.707 9.27 5.707 3.893 0 6.38-1.946 6.38-4.635 0-3.222-2.555-4.364-6.84-6.238l-2.35-1.008c-6.781-2.89-11.286-6.508-11.286-14.159 0-7.047 5.37-12.413 13.762-12.413 5.975 0 10.27 2.08 13.365 7.524l-7.317 4.699c-1.612-2.89-3.35-4.027-6.048-4.027-2.752 0-4.497 1.746-4.497 4.027 0 2.819 1.746 3.96 5.778 5.706l2.35 1.006c7.983 3.424 12.491 6.915 12.491 14.762 0 8.46-6.646 13.096-15.571 13.096-8.727 0-14.365-4.16-17.124-9.61zm-33.196.815c1.477 2.619 2.82 4.833 6.048 4.833 3.087 0 5.035-1.208 5.035-5.905V45.916h9.397v32.08c0 9.73-5.705 14.158-14.032 14.158-7.524 0-11.881-3.894-14.097-8.583z" />
                     </g>
                     <defs>
-                        <clipPath id="a">
+                        <clipPath id="js-a">
                             <path fill="#fff" d="M0 0h100v100H0z" />
                         </clipPath>
                     </defs>
@@ -1031,12 +275,12 @@ Beyond development, I have a background in competitive programming, with a highe
             <!-- Git -->
             <div class="stack-item">
                 <svg width="48" height="48" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 100 100">
-                    <g clip-path="url(#a)">
+                    <g clip-path="url(#git-a)">
                         <path fill="#de4c36"
                             d="M98.114 45.544 54.454 1.886a6.44 6.44 0 0 0-9.108 0l-9.066 9.066 11.5 11.501a7.65 7.65 0 0 1 7.869 1.834 7.66 7.66 0 0 1 1.817 7.916L68.55 43.287c2.682-.923 5.776-.326 7.918 1.82a7.66 7.66 0 0 1 0 10.836 7.662 7.662 0 0 1-12.508-8.335L53.623 37.271v27.202a7.663 7.663 0 0 1 2.026 12.288 7.66 7.66 0 0 1-10.836 0 7.663 7.663 0 0 1 2.508-12.51V36.795a7.6 7.6 0 0 1-2.508-1.672 7.66 7.66 0 0 1-1.651-8.377l-11.338-11.34L1.887 45.344a6.44 6.44 0 0 0 0 9.11l43.661 43.659a6.44 6.44 0 0 0 9.108 0l43.458-43.457a6.444 6.444 0 0 0 0-9.11" />
                     </g>
                     <defs>
-                        <clipPath id="a">
+                        <clipPath id="git-a">
                             <path fill="#fff" d="M0 0h100v100H0z" />
                         </clipPath>
                     </defs>
@@ -1055,7 +299,7 @@ Beyond development, I have a background in competitive programming, with a highe
             <!-- Postman -->
             <div class="stack-item">
                 <svg width="48" height="48" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 100 100">
-                    <g clip-path="url(#a)">
+                    <g clip-path="url(#postman-a)">
                         <path fill="#ff6c37"
                             d="M89.573 19.44a50 50 0 1 0-9.002 70.124c21.844-16.881 25.875-48.273 9-70.125z" />
                         <path fill="#fff"
@@ -1098,7 +342,7 @@ Beyond development, I have a background in competitive programming, with a highe
                             d="M41.989 56.733a1.54 1.54 0 0 1-1.333-.792 1.5 1.5 0 0 1 .25-1.793l3.042-3.042a.79.79 0 0 1 1.083 0l3.542 3.542a.75.75 0 0 1-.458 1.293l-5.833.75zm0-1.542 4.417-.543-1.958-1.957-2.5 2.5zm36.25-30.125a.625.625 0 0 0-.793-.25.58.58 0 0 0-.29.344.6.6 0 0 0 .04.448c.292.614.211 1.34-.208 1.875a.53.53 0 0 0-.156.395.6.6 0 0 0 .156.396.45.45 0 0 0 .333 0 .55.55 0 0 0 .542-.168 2.88 2.88 0 0 0 .375-3.042z" />
                     </g>
                     <defs>
-                        <clipPath id="a">
+                        <clipPath id="postman-a">
                             <path fill="#fff" d="M0 0h100v100H0z" />
                         </clipPath>
                     </defs>
@@ -1232,57 +476,7 @@ Beyond development, I have a background in competitive programming, with a highe
     </footer>
 
     <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
-    <script>
-        // CURSOR
-        const cursor = document.getElementById('cursor');
-        const dot = document.getElementById('cursorDot');
-        const ring = document.getElementById('cursorRing');
-        let mx = 0, my = 0, rx = 0, ry = 0;
-        document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
-        function anim() {
-            rx += (mx - rx) * 0.2;
-            ry += (my - ry) * 0.2;
-            dot.style.left = mx + 'px';
-            dot.style.top = my + 'px';
-            ring.style.left = rx + 'px';
-            ring.style.top = ry + 'px';
-            requestAnimationFrame(anim);
-        }
-        anim();
-
-        document.querySelectorAll('a, .stack-item, .btn, .project-card, .exp-card').forEach(el => {
-            el.addEventListener('mouseenter', () => {
-                ring.style.width = '48px';
-                ring.style.height = '48px';
-                ring.style.borderColor = '#22d3ee';
-                ring.style.opacity = '0.9';
-            });
-            el.addEventListener('mouseleave', () => {
-                ring.style.width = '36px';
-                ring.style.height = '36px';
-                ring.style.borderColor = '#67e8f9';
-                ring.style.opacity = '0.25';
-            });
-        });
-
-        // NAVBAR SCROLL
-        window.addEventListener('scroll', () => {
-            document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 80);
-        });
-
-        // SCROLL REVEAL
-        const reveals = document.querySelectorAll('.reveal');
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach((entry, i) => {
-                if (entry.isIntersecting) {
-                    setTimeout(() => {
-                        entry.target.classList.add('visible');
-                    }, i * 80);
-                }
-            });
-        }, { threshold: 0.1 });
-        reveals.forEach(el => observer.observe(el));
-    </script>
+    <script src="script.js"></script>
 </body>
 
 </html>
