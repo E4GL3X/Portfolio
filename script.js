@@ -1,78 +1,66 @@
-// CURSOR
-const cursor = document.getElementById('cursor');
-const dot = document.getElementById('cursorDot');
-const ring = document.getElementById('cursorRing');
-let mx = 0, my = 0, rx = 0, ry = 0;
-let isTouch = window.matchMedia('(pointer: coarse)').matches;
-
-if (!isTouch) {
-    document.addEventListener('mousemove', e => {
-        mx = e.clientX;
-        my = e.clientY;
-    });
-
-    const anim = () => {
-        rx += (mx - rx) * 0.2;
-        ry += (my - ry) * 0.2;
-        dot.style.left = mx + 'px';
-        dot.style.top = my + 'px';
-        ring.style.left = rx + 'px';
-        ring.style.top = ry + 'px';
-        requestAnimationFrame(anim);
-    };
-    anim();
-
-    document.querySelectorAll('a, .stack-item, .btn, .project-card, .exp-card').forEach(el => {
-        el.addEventListener('mouseenter', () => {
-            ring.style.width = '48px';
-            ring.style.height = '48px';
-            ring.style.borderColor = 'var(--accent-glow)';
-            ring.style.opacity = '0.9';
-        });
-        el.addEventListener('mouseleave', () => {
-            ring.style.width = '36px';
-            ring.style.height = '36px';
-            ring.style.borderColor = 'var(--accent)';
-            ring.style.opacity = '0.25';
-        });
-    });
-}
-
-// HAMBURGER MENU
+const header = document.getElementById('navbar');
 const menuToggle = document.getElementById('menuToggle');
 const navLinks = document.getElementById('navLinks');
+const navAnchors = [...document.querySelectorAll('.nav-links a')];
+
+const closeMenu = () => {
+    if (!menuToggle || !navLinks) return;
+    menuToggle.classList.remove('active');
+    navLinks.classList.remove('active');
+    menuToggle.setAttribute('aria-expanded', 'false');
+    menuToggle.setAttribute('aria-label', 'Open navigation');
+};
 
 if (menuToggle && navLinks) {
     menuToggle.addEventListener('click', () => {
-        menuToggle.classList.toggle('active');
-        navLinks.classList.toggle('active');
+        const isOpen = menuToggle.classList.toggle('active');
+        navLinks.classList.toggle('active', isOpen);
+        menuToggle.setAttribute('aria-expanded', String(isOpen));
+        menuToggle.setAttribute('aria-label', isOpen ? 'Close navigation' : 'Open navigation');
     });
 
-    // Close menu when clicking a link
-    document.querySelectorAll('.nav-links a').forEach(link => {
-        link.addEventListener('click', () => {
-            menuToggle.classList.remove('active');
-            navLinks.classList.remove('active');
-        });
+    navAnchors.forEach((link) => link.addEventListener('click', closeMenu));
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') closeMenu();
     });
 }
 
+const updateHeader = () => {
+    header?.classList.toggle('scrolled', window.scrollY > 24);
+};
 
-// NAVBAR SCROLL
-window.addEventListener('scroll', () => {
-    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 80);
-});
+updateHeader();
+window.addEventListener('scroll', updateHeader, { passive: true });
 
-// SCROLL REVEAL
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const reveals = document.querySelectorAll('.reveal');
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry, i) => {
-        if (entry.isIntersecting) {
-            setTimeout(() => {
-                entry.target.classList.add('visible');
-            }, i * 80);
-        }
-    });
-}, { threshold: 0.1 });
 
-reveals.forEach(el => observer.observe(el));
+if (reduceMotion || !('IntersectionObserver' in window)) {
+    reveals.forEach((element) => element.classList.add('visible'));
+} else {
+    const revealObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+        });
+    }, { threshold: 0.12, rootMargin: '0px 0px -48px' });
+
+    reveals.forEach((element) => revealObserver.observe(element));
+}
+
+const observedSections = [...document.querySelectorAll('main section[id]')];
+
+if ('IntersectionObserver' in window) {
+    const sectionObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            navAnchors.forEach((link) => {
+                link.classList.toggle('active', link.getAttribute('href') === `#${entry.target.id}`);
+            });
+        });
+    }, { rootMargin: '-35% 0px -55%', threshold: 0 });
+
+    observedSections.forEach((section) => sectionObserver.observe(section));
+}
